@@ -1,62 +1,64 @@
 import sys
 import requests
-import random
 import time
+import random
 
-def is_live(channel_name):
-    # Function to check if the channel is live
-    url = f"https://api.twitch.tv/helix/streams?user_login={channel_name}"
-    headers = {
-        "Client-ID": "<YOUR_TWITCH_CLIENT_ID>"
-    }
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        data = response.json()
-        if data["data"]:
-            return True
-        else:
-            return False
-    else:
-        print("An error occurred while checking the stream status.")
-        sys.exit(1)
+# Twitch API client ID
+client_id = "your_twitch_api_client_id"
+# Twitch channel ID
+channel_id = "your_twitch_channel_id"
 
-def toot(status):
-    # Function to post a toot to Mastodon
-    access_token = "<YOUR_MASTODON_ACCESS_TOKEN>"
+# Live messages to post to Mastodon
+live_messages = [
+    "ChiefGyk3D is now live on Twitch! Come join the fun! #ChiefGyk3D #Twitch",
+    "It's time to get your game on! ChiefGyk3D is now live! #ChiefGyk3D #Twitch",
+    "The stream is now live! Don't miss out on the action with ChiefGyk3D! #ChiefGyk3D #Twitch"
+]
+
+# Offline messages to post to Mastodon
+offline_messages = [
+    "Thanks for tuning in to ChiefGyk3D's stream! See you next time! #ChiefGyk3D #Twitch",
+    "That's a wrap! Thanks for joining ChiefGyk3D's stream. Until next time! #ChiefGyk3D #Twitch",
+    "ChiefGyk3D's stream has ended. See you next time for more fun and games! #ChiefGyk3D #Twitch"
+]
+
+# Mastodon API access token
+access_token = "your_mastodon_api_access_token"
+# Mastodon instance URL
+instance_url = "https://your.mastodon.instance"
+
+def post_toot(status):
+    url = f"{instance_url}/api/v1/statuses"
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json"
     }
-    payload = {
+    data = {
         "status": status,
-        "visibility": "unlisted"
+        "visibility": "public"
     }
-    response = requests.post("https://<YOUR_MASTODON_INSTANCE>/api/v1/statuses", headers=headers, json=payload)
-    if response.status_code == 200:
-        print(f"Tooted: {status}")
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code != 200:
+        print(f"An error occurred while posting the toot: {response.text}")
     else:
-        print("An error occurred while tooting.")
-        sys.exit(1)
+        print(f"Successfully posted toot: {status}")
 
-if __name__ == "__main__":
-    channel_name = "ChiefGyk3D"
-    live_messages = [
-        "ChiefGyk3D is now live on Twitch! Come join the fun!",
-        "Streaming live now on Twitch with ChiefGyk3D!",
-        "Let's get this party started with ChiefGyk3D's live stream on Twitch!",
-        "Time to tune in to ChiefGyk3D's live stream on Twitch!"
-    ]
-    end_messages = [
-        "Thanks for tuning in to ChiefGyk3D's stream on Twitch!",
-        "That was a great stream by ChiefGyk3D on Twitch! See you next time!",
-        "Until next time, farewell from ChiefGyk3D's stream on Twitch!",
-        "ChiefGyk3D's stream on Twitch has ended. See you soon!"
-    ]
-    while True:
-        if is_live(channel_name):
-            toot(random.choice(live_messages))
-            while is_live(channel_name):
-                time.sleep(60)
+while True:
+    # Check the status of the Twitch stream
+    url = f"https://api.twitch.tv/helix/streams?user_id={channel_id}"
+    headers = {"Client-ID": client_id}
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        print(f"An error occurred while checking the stream status: {response.text}")
+    else:
+        data = response.json()
+        if data["data"]:
+            # The channel is live, post a random live message to Mastodon
+            status = random.choice(live_messages)
+            post_toot(status)
         else:
-            toot(random.choice(end_messages))
-            time.sleep(60)
+            # The channel is offline, post a random offline message to Mastodon
+            status = random.choice(offline_messages)
+            post_toot(status)
+    # Wait for a while before checking the status again
+    time.sleep(60)
