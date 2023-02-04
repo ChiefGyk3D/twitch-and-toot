@@ -1,6 +1,6 @@
 # twitch-and-toot
 WORK IN PROGRESS
-This is a service to be run locally or on a VPS to monitor your twitch and post to your mastod when you have gone live. 
+This is a service to be run locally or on a VPS to monitor your twitch and post to your mastodon when you have gone live. 
 
 I am looking to grab ideas from this project here https://github.com/Siddhart/Twitch-Discord-Bot for Discord but imitate it to do the same on Mastodon.
 
