@@ -8,6 +8,13 @@ In its current state it needs more testing but seems to work
 
 Enter all variables into config.json
 
+ONLY EDIT THE FOLLOWING:
+    "mastodonInstance": "YOUR_MASTODON_INSTANCE_URL",
+    "mastodonAccessToken":"YOUR_MASTODON_ACCESS_TOKEN",
+    "twitch_clientID": "TWITCH_API_CLIENT_ID(REQUIRED)",
+    "twitch_secret": "TWITCH_API_SECRET(REQUIRED)",
+    "ChannelName": "STREAMER_NAME(REQUIRED)",
+
 End goal of the project is to
 
 1) Monitor Twitch for a specific streamer
