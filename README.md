@@ -4,7 +4,9 @@ This is a service to be run locally or on a VPS to monitor your twitch and post 
 
 I am looking to grab ideas from this project here https://github.com/Siddhart/Twitch-Discord-Bot for Discord but imitate it to do the same on Mastodon.
 
-In its current state this does not work. 
+In its current state it needs more testing but seems to work
+
+Enter all variables into config.json
 
 End goal of the project is to
 
