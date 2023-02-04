@@ -1,5 +1,6 @@
 const mastodon = require("mastodon-api");
 const config = require("./config.json");
+const fs = require("fs");
 const { getKey } = require("./modules/auth.js");
 const { getData: getChannelData } = require("./modules/channelData.js");
 const { getData: getStreamData } = require("./modules/getStreams.js");
@@ -73,8 +74,10 @@ async function checkStreamerStatus() {
 
     // Update lastPostTime in the config
     config.lastPostTime = currentTime;
+    fs.writeFileSync("./config.json", JSON.stringify(config));
   }
 }
 
 // Check the streamer status every 10 minutes
+checkStreamerStatus()
 setInterval(checkStreamerStatus, 600000);

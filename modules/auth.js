@@ -1,6 +1,6 @@
 const request = require('request')
 
-async function getKey(clientID, clientSecret) {
+function getKey(clientID, clientSecret) {
     return new Promise((resolve, reject) => {
         request.post(
             `https://id.twitch.tv/oauth2/token?client_id=${clientID}&client_secret=${clientSecret}&grant_type=client_credentials`,
