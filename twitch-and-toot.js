@@ -1,13 +1,23 @@
-const mastodon = require("mastodon-api");
-const config = require("./config.json");
+const Mastodon = require("mastodon-api");
 const fs = require("fs");
+const process = require('node:process');
 const { getKey } = require("./modules/auth.js");
 const { getData: getChannelData } = require("./modules/channelData.js");
 const { getData: getStreamData } = require("./modules/getStreams.js");
-const randomIndex = Math.floor(Math.random() * 6);
 
-// Define a list of messages to be posted randomly when the streamer is live
-const messages = [
+let lastPostTime = 0;
+
+// Config
+const LAST_POST_TIME_FILE = process.env.LAST_POST_TIME_FILE || "last_post_time.txt";
+const MASTODON_ACCESS_TOKEN = process.env.MASTODON_ACCESS_TOKEN;
+const MASTODON_INSTANCE = process.env.MASTODON_INSTANCE;
+const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
+const TWITCH_SECRET = process.env.TWITCH_SECRET;
+const TWITCH_CHANNEL_NAME = process.env.TWITCH_CHANNEL_NAME;
+
+// TODO: Make this not hard coded
+const MAX_POST_INTERVAL = 1000 * 60 * 60 * 6; // Every 6 hours
+const MESSAGES = [
   "The streamer is live! Check them out on Twitch!",
   "It's a good day for some live streaming, don't miss it!",
   "Streaming live now on Twitch, come join the fun!",
@@ -15,77 +25,73 @@ const messages = [
   "Don't miss the live stream, it's happening now!"
 ];
 
-let lastPostTime = 0;
+// Load last post time from file
+if (fs.existsSync(LAST_POST_TIME_FILE)) {
+  const contents = fs.readFileSync(LAST_POST_TIME_FILE);
+  lastPostTime = parseInt(contents);
+}
 
 async function postToMastodon(status) {
-  const currentTime = new Date().getTime();
+  const MastonClient = new Mastodon({
+    access_token: MASTODON_ACCESS_TOKEN,
+    api_url: MASTODON_INSTANCE + "/api/v1/"
+  });
 
-  if (currentTime - lastPostTime >= 6 * 60 * 60 * 1000) {
-    const M = new mastodon({
-      access_token: config.mastodonAccessToken,
-      api_url: config.mastodonInstance + "/api/v1/"
-    });
-
-    M.post("statuses", { status: status }, (error, data) => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log("Post to Mastodon successful!");
-        lastPostTime = currentTime;
-      }
-    });
-  } else {
-    console.log("Mastodon post skipped, last post was less than 6 hours ago.");
-  }
+  await MastodonClient.post("statuses", { status: status });
+  lastPostTime = currentTime;
+  console.log("Posed to Mastodon!")
 }
 
 async function checkStreamerStatus() {
   // Get Twitch API authentication token
-  const authToken = await getKey(config.twitch_clientID, config.twitch_secret);
+  const authToken = await getKey(TWITCH_CLIENT_ID, TWITCH_SECRET);
 
   // Get channel data from Twitch API
   const channelData = await getChannelData(
-    config.ChannelName,
-    config.twitch_clientID,
+    TWITCH_CHANNEL_NAME,
+    TWITCH_CHANNEL_ID,
     authToken
   );
 
   if (!channelData) {
-    console.error(`Channel "${config.ChannelName}" not found on Twitch.`);
+    console.error(`Could not find twitch channel: ${TWITCH_CHANNEL_NAME}`);
+    process.exit(1);
     return;
   }
 
   // Get stream data from Twitch API
   const streamData = await getStreamData(
-    config.ChannelName,
-    config.twitch_clientID,
+    TWITCH_CHANNEL_NAME,
+    TWITCH_CHANNEL_ID,
     authToken
   );
 
   // Check if the streamer is live
   if (streamData.data.length === 0) {
-    console.log(`${config.ChannelName} is currently offline.`);
+    console.log(`${TWITCH_CHANNEL_NAME} is currently offline.`);
     return;
   } else {
-    console.log(`${config.ChannelName} is live!`);
+    console.log(`${TWITCH_CHANNEL_NAME} is live!`);
   }
 
   // Check if it has been more than 6 hours since the last post
-  const lastPostTime = fs.existsSync("./lastPostTime.txt")
-    ? parseInt(fs.readFileSync("./lastPostTime.txt").toString(), 10)
-    : 0;
-  const now = new Date().getTime();
-  if (now - lastPostTime > 6 * 60 * 60 * 1000) {
-    // Post to Mastodon
-    postToMastodon(messages[Math.floor(Math.random() * messages.length)]);
+  const currentTime = new Date().getTime();
+  const timeSinceLastPost = currentTime - lastPostTime;
 
-
-    // Save the time of this post
-    fs.writeFileSync("./lastPostTime.txt", now.toString());
+  if (timeSinceLastPost < MAX_POST_INTERVAL) {
+    return; // Already posted
   }
+
+  // Post messages
+  let liveMessage = messages[Math.floor(Math.random() * messages.length)];
+  postToMastodon(liveMessage);
+
+  // Persist last post status
+  lastPostTime = currentTime;
+  fs.writeFileSync(LAST_POST_TIME_FILE, currentTime.toString());
 }
 
 
 // Check the streamer status every 10 minutes
 checkStreamerStatus();
-setInterval(checkStreamerStatus, 600000);
+setInterval(checkStreamerStatus, 1000 * 60 * 10);

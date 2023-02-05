@@ -1,37 +1,21 @@
-const request = require('request')
+export async function getData(channelName, clientID,authkey) {
+    let response = await fetch(`https://api.twitch.tv/helix/search/channels?query=${channelName}`
+        headers: {
+            "client-id": clientID,
+            "authorization": `Bearer ${authKey}`
+        }
+    );
+    let streamers = response.json().data;
 
-async function getData(channelName, clientID, authkey) {
-    return new Promise((resolve, reject) => {
-        var headers = {
-            'client-id': clientID,
-            'Authorization': `Bearer ${authkey}`
-        };
-        request.get(
-            `https://api.twitch.tv/helix/search/channels?query=${channelName}`,{headers:headers},
-            (error, res, body) => {
-                if (error) {
-                    return console.error(error)
-                }
-                try{
-                    const channelTempData = JSON.parse(body).data
-                    var doesExist = false
-                    
-                    for(let i = 0; i < channelTempData.length; i++){
-                        if((channelTempData[i].broadcaster_login).toLowerCase() == channelName.toLowerCase()){
-                            doesExist = true
-                            resolve(JSON.parse(body).data[i])
-                        }
-                    }
+    let maybeStreamer = streamers.filter((streamer) => {
+        let streamerName = streamer.broadcaster_login.toLowerCase();
 
-                    if(!doesExist){
-                        resolve(false)
-                    }
-                }catch(e){
-                    reject(e)
-                }
-            }
-        )
+        return streamerName === channelName.toLowerCase(); // TODO: is converting this to lowercase neccesary?
     });
-}
 
-module.exports = { getData };
+    if (maybeStreamer.length === 0) {
+        return false;
+    }
+    return maybeStreamer[0];
+    
+}
