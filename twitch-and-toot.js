@@ -17,6 +17,8 @@ const messages = [
 
 let lastPostTime = 0;
 
+let sendAnnouncement = false; // If the user is didn't went offline don't send announcement again, because he is still live.
+
 async function postToMastodon(status) {
   const currentTime = new Date().getTime();
 
@@ -29,9 +31,10 @@ async function postToMastodon(status) {
     M.post("statuses", { status: status }, (error, data) => {
       if (error) {
         console.error(error);
-      } else {
+      } else if (!sendAnnouncement) {
         console.log("Post to Mastodon successful!");
         lastPostTime = currentTime;
+        sendAnnouncement = true; // True, the post was sucessful.
       }
     });
   } else {
@@ -65,6 +68,7 @@ async function checkStreamerStatus() {
   // Check if the streamer is live
   if (streamData.data.length === 0) {
     console.log(`${config.ChannelName} is currently offline.`);
+    sendAnnouncement = false; // The user is offline so we can send the announcement when he goes back live again :)
     return;
   } else {
     console.log(`${config.ChannelName} is live!`);
@@ -84,6 +88,7 @@ async function checkStreamerStatus() {
     fs.writeFileSync("./lastPostTime.txt", now.toString());
   }
 }
+
 
 
 // Check the streamer status every 10 minutes
