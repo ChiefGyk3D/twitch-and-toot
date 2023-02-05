@@ -22,13 +22,18 @@ const messages = [
   "Twitch streaming time, let's go!"
 ];
 
+let announcementSent = false; // Create the variable.
+
 // function to post a random message to Mastodon
 function postToMastodon(streamer) {
-  let randomMessage = messages[Math.floor(Math.random() * messages.length)];
-  mastodon.post("statuses", { status: `@${streamer} ${randomMessage}` }, function(err, data) {
-    if (err) console.error(err);
-    else console.log(`Successfully posted to Mastodon: ${randomMessage}`);
-  });
+  if (!announcementSent){
+    let randomMessage = messages[Math.floor(Math.random() * messages.length)];
+      mastodon.post("statuses", { status: `@${streamer} ${randomMessage}` }, function(err, data) {
+      if (err) console.error(err);
+      else console.log(`Successfully posted to Mastodon: ${randomMessage}`);
+      announcementSent = true; // Announcement Sent so = true
+    });
+  }
 }
 
 // function to refresh Twitch OAuth token
@@ -55,6 +60,7 @@ setInterval(function() {
         postToMastodon(streamer);
       } else {
         console.log(`${streamer} is not live.`);
+        announcementSent = false; // Streamer is not live anymore reset the status.
       }
     }
   });
