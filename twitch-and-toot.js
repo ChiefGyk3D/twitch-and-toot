@@ -5,7 +5,6 @@ const { getKey } = require("./modules/auth.js");
 const { getData: getChannelData } = require("./modules/channelData.js");
 const { getData: getStreamData } = require("./modules/getStreams.js");
 
-let lastPostTime = 0;
 
 // Config
 const LAST_POST_TIME_FILE = process.env.LAST_POST_TIME_FILE || "last_post_time.txt";
@@ -25,13 +24,14 @@ const MESSAGES = [
   "Don't miss the live stream, it's happening now!"
 ];
 
+let lastPostTime = 0;
+let sendAnnouncement = false; // If the user is didn't went offline don't send announcement again, because he is still live.
+
 // Load last post time from file
 if (fs.existsSync(LAST_POST_TIME_FILE)) {
   const contents = fs.readFileSync(LAST_POST_TIME_FILE);
   lastPostTime = parseInt(contents);
 }
-
-let sendAnnouncement = false; // If the user is didn't went offline don't send announcement again, because he is still live.
 
 async function postToMastodon(status) {
   const MastonClient = new Mastodon({
