@@ -31,6 +31,8 @@ if (fs.existsSync(LAST_POST_TIME_FILE)) {
   lastPostTime = parseInt(contents);
 }
 
+let sendAnnouncement = false; // If the user is didn't went offline don't send announcement again, because he is still live.
+
 async function postToMastodon(status) {
   const MastonClient = new Mastodon({
     access_token: MASTODON_ACCESS_TOKEN,
@@ -69,6 +71,7 @@ async function checkStreamerStatus() {
   // Check if the streamer is live
   if (streamData.data.length === 0) {
     console.log(`${TWITCH_CHANNEL_NAME} is currently offline.`);
+    sendAnnouncement = false; // The user is offline so we can send the announcement when he goes back live again :)
     return;
   } else {
     console.log(`${TWITCH_CHANNEL_NAME} is live!`);
@@ -86,10 +89,13 @@ async function checkStreamerStatus() {
   let liveMessage = messages[Math.floor(Math.random() * messages.length)];
   postToMastodon(liveMessage);
 
+  sendAnnouncement = true;
+
   // Persist last post status
   lastPostTime = currentTime;
   fs.writeFileSync(LAST_POST_TIME_FILE, currentTime.toString());
 }
+
 
 
 // Check the streamer status every 10 minutes
