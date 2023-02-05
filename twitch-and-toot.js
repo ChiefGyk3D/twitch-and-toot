@@ -77,7 +77,8 @@ async function checkStreamerStatus() {
   const now = new Date().getTime();
   if (now - lastPostTime > 6 * 60 * 60 * 1000) {
     // Post to Mastodon
-    postToMastodon(messages[randomIndex]);
+    postToMastodon(messages[Math.floor(Math.random() * messages.length)]);
+
 
     // Save the time of this post
     fs.writeFileSync("./lastPostTime.txt", now.toString());
