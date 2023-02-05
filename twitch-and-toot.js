@@ -1,67 +1,94 @@
-const TwitchApi = require("twitch-api");
-const Mastodon = require("mastodon-api");
+const mastodon = require("mastodon-api");
+const config = require("./config.json");
+const fs = require("fs");
+const { getKey } = require("./modules/auth.js");
+const { getData: getChannelData } = require("./modules/channelData.js");
+const { getData: getStreamData } = require("./modules/getStreams.js");
+const randomIndex = Math.floor(Math.random() * 6);
 
-// setup Twitch API with client ID and OAuth token
-const twitch = new TwitchApi({
-  clientId: process.env.TWITCH_CLIENT_ID,
-  accessToken: process.env.TWITCH_OAUTH_TOKEN
-});
-
-// setup Mastodon API with access token
-const mastodon = new Mastodon({
-  access_token: process.env.MASTODON_ACCESS_TOKEN,
-  api_url: "https://mastodon.social/api/v1/"
-});
-
-// array of messages to post to Mastodon when streamer is live
+// Define a list of messages to be posted randomly when the streamer is live
 const messages = [
-  "Streaming live on Twitch now! Check it out!",
-  "Come join the live stream party on Twitch!",
-  "It's a good day to watch a live stream on Twitch. Tune in!",
-  "Streaming live on Twitch, don't miss it!",
-  "Twitch streaming time, let's go!"
+  "The streamer is live! Check them out on Twitch!",
+  "It's a good day for some live streaming, don't miss it!",
+  "Streaming live now on Twitch, come join the fun!",
+  "Go check out the stream, it's live!",
+  "Don't miss the live stream, it's happening now!"
 ];
 
-let announcementSent = false; // Create the variable.
+let lastPostTime = 0;
+let sendAnnouncement = false; // If the user is didn't went offline don't send announcement again, because he is still live.
 
-// function to post a random message to Mastodon
-function postToMastodon(streamer) {
-  if (!announcementSent){
-    let randomMessage = messages[Math.floor(Math.random() * messages.length)];
-      mastodon.post("statuses", { status: `@${streamer} ${randomMessage}` }, function(err, data) {
-      if (err) console.error(err);
-      else console.log(`Successfully posted to Mastodon: ${randomMessage}`);
-      announcementSent = true; // Announcement Sent so = true
+async function postToMastodon(status) {
+  const currentTime = new Date().getTime();
+
+  if (currentTime - lastPostTime >= 6 * 60 * 60 * 1000) {
+    const M = new mastodon({
+      access_token: config.mastodonAccessToken,
+      api_url: config.mastodonInstance + "/api/v1/"
     });
+
+    M.post("statuses", { status: status }, (error, data) => {
+      if (error) {
+        console.error(error);
+      } else if (!sendAnnouncement) {
+        console.log("Post to Mastodon successful!");
+        lastPostTime = currentTime;
+        sendAnnouncement = true; // True, the post was sucessful.
+      }
+    });
+  } else {
+    console.log("Mastodon post skipped, last post was less than 6 hours ago.");
   }
 }
 
-// function to refresh Twitch OAuth token
-function refreshTwitchToken() {
-  twitch.refreshToken(process.env.TWITCH_REFRESH_TOKEN, function(err, data) {
-    if (err) console.error(err);
-    else {
-      console.log("Successfully refreshed Twitch OAuth token");
-      process.env.TWITCH_OAUTH_TOKEN = data.access_token;
-    }
-  });
+async function checkStreamerStatus() {
+  // Get Twitch API authentication token
+  const authToken = await getKey(config.twitch_clientID, config.twitch_secret);
+
+  // Get channel data from Twitch API
+  const channelData = await getChannelData(
+    config.ChannelName,
+    config.twitch_clientID,
+    authToken
+  );
+
+  if (!channelData) {
+    console.error(`Channel "${config.ChannelName}" not found on Twitch.`);
+    return;
+  }
+
+  // Get stream data from Twitch API
+  const streamData = await getStreamData(
+    config.ChannelName,
+    config.twitch_clientID,
+    authToken
+  );
+
+  // Check if the streamer is live
+  if (streamData.data.length === 0) {
+    console.log(`${config.ChannelName} is currently offline.`);
+    sendAnnouncement = false; // The user is offline so we can send the announcement when he goes back live again :)
+    return;
+  } else {
+    console.log(`${config.ChannelName} is live!`);
+  }
+
+  // Check if it has been more than 6 hours since the last post
+  const lastPostTime = fs.existsSync("./lastPostTime.txt")
+    ? parseInt(fs.readFileSync("./lastPostTime.txt").toString(), 10)
+    : 0;
+  const now = new Date().getTime();
+  if (now - lastPostTime > 6 * 60 * 60 * 1000) {
+    // Post to Mastodon
+    postToMastodon(messages[Math.floor(Math.random() * messages.length)]);
+
+
+    // Save the time of this post
+    fs.writeFileSync("./lastPostTime.txt", now.toString());
+  }
 }
 
-// check if streamer is live every 10 minutes
-setInterval(function() {
-  const streamer = "example_streamer";
-  twitch.streams.live({ channel: streamer }, function(err, data) {
-    if (err) {
-      console.error(err);
-      refreshTwitchToken();
-    } else {
-      if (data.stream) {
-        console.log(`${streamer} is live!`);
-        postToMastodon(streamer);
-      } else {
-        console.log(`${streamer} is not live.`);
-        announcementSent = false; // Streamer is not live anymore reset the status.
-      }
-    }
-  });
-}, 600000);
+
+// Check the streamer status every 10 minutes
+checkStreamerStatus();
+setInterval(checkStreamerStatus, 600000);
