@@ -3,7 +3,7 @@
 Twitch-and-toot is an open source project that allows you to post to Mastodon when a streamer is live on Twitch. It is built on NodeJS and can run on a RaspberryPi, Single Board Computer, Linux VPS, or a private server.
 Requirements and Prerequisites
 
-    NodeJS installed on the device that you plan to run the script on.
+    Docker installed on the device that you plan to run the script on.
     A Twitch API key (client ID and secret) which can be obtained from the Twitch Developer Dashboard.
     A Mastodon API key (access token) which can be obtained from your Mastodon instance.
 
@@ -11,14 +11,14 @@ Requirements and Prerequisites
 
     Clone the Github repository to your device: git clone https://github.com/ChiefGyk3D/twitch-and-toot.git
     Install the required packages: npm install
-    Create a config.json file based on the config_template.json file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track.
-    Run the script: node twitch-and-toot.js
+    Create a .env file based on the example.env file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track.
+    Start the docker container: docker-compose up --build -d
 
 ## Configuration
 
-The configuration file config.json is used to store the required information such as Twitch API key, Mastodon API key, and the channel name you want to track. 
+The configuration file .env is used to store the required information such as Twitch API key, Mastodon API key, and the channel name you want to track. 
 
-You can also customize the messages that will be posted to Mastodon when the streamer is live, but you currently must keep a total of five (5) messages for the array to work properly. And they are customized directly in the script. I hope in the future to move it to config.json
+You can also customize the messages that will be posted to Mastodon when the streamer is live. And they are customized directly in the script. I hope in the future to move it to config.json
 
 ## Modules
 
