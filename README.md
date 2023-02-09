@@ -45,4 +45,3 @@ You can also tip the author with the following cryptocurrency addresses:
 Author
 
 ChiefGyk3D is the author of Twitch-and-toot, with assistance from Y-Love to educate on NodeJS. ChatGPT helped build about 80% of the template
-[ChiefGyk3D's Mastodon Account](https://social.chiefgyk3d.com/@chiefgyk3d)
