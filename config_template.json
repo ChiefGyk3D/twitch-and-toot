@@ -1,0 +1,12 @@
+{
+    "mastodonInstance": "YOUR_MASTODON_INSTANCE_URL",
+    "mastodonAccessToken":"YOUR_MASTODON_ACCESS_TOKEN",
+    "twitch_clientID": "TWITCH_API_CLIENT_ID(REQUIRED)",
+    "twitch_secret": "TWITCH_API_SECRET(REQUIRED)",
+    "ChannelName": "STREAMER_NAME(REQUIRED)",
+    //"cron": "*/10 * * * *",
+    "twitch_stream_id": "",
+    "channels": "",
+    "authToken": "",
+    "lastPostTime": ""
+}

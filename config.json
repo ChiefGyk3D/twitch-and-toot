@@ -1,0 +1,19 @@
+{
+    "mastodonInstance": "YOUR_MASTODON_INSTANCE_URL",
+    "mastodonAccessToken":"YOUR_MASTODON_ACCESS_TOKEN",
+    "twitch_clientID": "TWITCH_API_CLIENT_ID(REQUIRED)",
+    "twitch_secret": "TWITCH_API_SECRET(REQUIRED)",
+    "ChannelName": "STREAMER_NAME(REQUIRED)",
+    "cron": "*/10 * * * *",
+    "twitch_stream_id": "",
+    "channels": "",
+    "authToken": "",
+    "lastPostTime": "",
+    "messages": [
+        "(testing) The streamer is live! Check them out on Twitch!",
+        "(testing)It's a good day for some live streaming, don't miss it!",
+        "(testing)Streaming live now on Twitch, come join the fun!",
+        "(testing)Go check out the stream, it's live!",
+        "(testing)Don't miss the live stream, it's happening now!"
+    ]
+}
