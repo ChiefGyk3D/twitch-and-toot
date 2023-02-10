@@ -4,7 +4,7 @@ const fs = require("fs");
 const { getKey } = require("./modules/auth.js");
 const { getData: getChannelData } = require("./modules/channelData.js");
 const { getData: getStreamData } = require("./modules/getStreams.js");
-const randomIndex = Math.floor(Math.random() * 6);
+const randomIndex = Math.floor(Math.random() * n);
 
 // Define a list of messages to be posted randomly when the streamer is live
 const messages = [
