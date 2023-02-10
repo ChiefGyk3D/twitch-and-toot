@@ -18,11 +18,11 @@ Requirements and Prerequisites
 
 The configuration file config.json is used to store the required information such as Twitch API key, Mastodon API key, and the channel name you want to track. 
 
-You can also customize the messages that will be posted to Mastodon when the streamer is live, but you currently must keep a total of five (5) messages for the array to work properly. And they are customized directly in the script. I hope in the future to move it to config.json
+You can also customize the messages that will be posted to Mastodon when the streamer is live. You can set any random messages and number of them in config.json.
 
 ## Modules
 
-The auth.js, channelData.js, and getStreams.js modules are borrowed from Twitch-Discord-Bot. They are used to obtain the required information from the Twitch API and post to Mastodon.
+The auth.js, channelData.js, and getStreams.js modules are borrowed from Twitch-Discord-Bot (https://github.com/Siddhart/Twitch-Discord-Bot). They are used to obtain the required information from the Twitch API and post to Mastodon.
 
 ## plans
     
