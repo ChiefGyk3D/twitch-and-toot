@@ -1,4 +1,3 @@
-config.json 
 {
     "mastodonInstance": "YOUR_MASTODON_INSTANCE_URL",
     "mastodonAccessToken":"YOUR_MASTODON_ACCESS_TOKEN",
@@ -11,11 +10,10 @@ config.json
     "authToken": "",
     "lastPostTime": "",
     "messages": [
-      "The streamer is live! Check them out on Twitch!",
-      "It's a good day for some live streaming, don't miss it!",
-      "Streaming live now on Twitch, come join the fun!",
-      "Go check out the stream, it's live!",
-      "Don't miss the live stream, it's happening now!",
-      "Another message here..."
+        "(testing) The streamer is live! Check them out on Twitch!",
+        "(testing)It's a good day for some live streaming, don't miss it!",
+        "(testing)Streaming live now on Twitch, come join the fun!",
+        "(testing)Go check out the stream, it's live!",
+        "(testing)Don't miss the live stream, it's happening now!"
     ]
 }

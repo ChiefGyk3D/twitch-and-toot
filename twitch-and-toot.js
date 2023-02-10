@@ -1,17 +1,11 @@
 // Define a list of messages to be posted randomly when the streamer is live
-const messages = [
-  "The streamer is live! Check them out on Twitch!",
-  "It's a good day for some live streaming, don't miss it!",
-  "Streaming live now on Twitch, come join the fun!",
-  "Go check out the stream, it's live!",
-  "Don't miss the live stream, it's happening now!"
-];
 const mastodon = require("mastodon-api");
 const config = require("./config.json");
 const fs = require("fs");
 const { getKey } = require("./modules/auth.js");
 const { getData: getChannelData } = require("./modules/channelData.js");
 const { getData: getStreamData } = require("./modules/getStreams.js");
+const messages = config.messages;
 const randomIndex = Math.floor(Math.random() * messages.length);
 
 let lastPostTime = 0;
