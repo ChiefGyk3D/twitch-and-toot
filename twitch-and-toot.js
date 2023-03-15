@@ -6,11 +6,9 @@ const { getKey } = require("./modules/auth.js");
 const { getData: getChannelData } = require("./modules/channelData.js");
 const { getData: getStreamData } = require("./modules/getStreams.js");
 const messages = config.messages;
-const randomIndex = Math.floor(Math.random() * messages.length);
 
 let lastPostTime = 0;
-
-let sendAnnouncement = false; // If the user is didn't went offline don't send announcement again, because he is still live.
+let sendAnnouncement = false;
 
 async function postToMastodon(status) {
   const currentTime = new Date().getTime();
@@ -61,11 +59,14 @@ async function checkStreamerStatus() {
   // Check if the streamer is live
   if (streamData.data.length === 0) {
     console.log(`${config.ChannelName} is currently offline.`);
-    sendAnnouncement = false; // The user is offline so we can send the announcement when he goes back live again :)
+    sendAnnouncement = false;
     return;
   } else {
     console.log(`${config.ChannelName} is live!`);
   }
+
+  // Extract the stream title
+  const streamTitle = streamData.data[0].title;
 
   // Check if it has been more than 6 hours since the last post
   const lastPostTime = fs.existsSync("./lastPostTime.txt")
@@ -73,17 +74,17 @@ async function checkStreamerStatus() {
     : 0;
   const now = new Date().getTime();
   if (now - lastPostTime > 6 * 60 * 60 * 1000) {
-    // Post to Mastodon
-    postToMastodon(messages[Math.floor(Math.random() * messages.length)]);
-
+    // Post to Mastodon with the stream title
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    const tootMessage = randomMessage.replace("{streamTitle}", streamTitle);
+    postToMastodon(tootMessage);
 
     // Save the time of this post
     fs.writeFileSync("./lastPostTime.txt", now.toString());
   }
 }
 
-
-
 // Check the streamer status every 10 minutes
 checkStreamerStatus();
 setInterval(checkStreamerStatus, 600000);
+
