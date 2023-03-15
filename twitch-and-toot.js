@@ -92,7 +92,7 @@ async function checkStreamerStatus() {
     if (prevStreamStatus === "online") {
       const currentTime = new Date().getTime();
       const timeSinceLastOnline = currentTime - lastOnlineTime;
-      const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
+      const minutesToWaitBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
 
       fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
       console.log("Writing current time to lastOnlineTime.txt");
@@ -114,10 +114,6 @@ async function checkStreamerStatus() {
       console.log("Writing 'online' to streamStatus.txt");
     }
   }
-
-  // Extract the stream title and URL
-//  const streamTitle = streamData.data[0].title;
-//  const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
   // Check if it has been more than the configured hours since the last post
   if (!sendAnnouncement) {
