@@ -116,28 +116,16 @@ async function checkStreamerStatus() {
     }
   }
 
-  // Check if it has been more than the configured hours since the last post
-  if (!sendAnnouncement) {
-    // Post to Mastodon with the stream title and URL
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    const tootMessage = randomMessage
-      .replace("{streamTitle}", streamTitle)
-      .replace("{streamUrl}", streamUrl);
-    postToMastodon(tootMessage);
-  }
+// Check if it has been more than the configured hours since the last post
+if (!sendAnnouncement) {
+  // Post to Mastodon with the stream title and URL
+  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+  const tootMessage = randomMessage
+    .replace("{streamTitle}", streamTitle)
+    .replace("{streamUrl}", streamUrl);
+  postToMastodon(tootMessage);
 }
-
-  // Check if it has been more than the configured hours since the last post
-  if (!sendAnnouncement) {
-    // Post to Mastodon with the stream title and URL
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    const tootMessage = randomMessage
-      .replace("{streamTitle}", streamTitle)
-      .replace("{streamUrl}", streamUrl);
-    postToMastodon(tootMessage);
-  }
 }
-
 
 // Check the streamer status every 10 minutes
 checkStreamerStatus();
