@@ -85,28 +85,28 @@ async function checkStreamerStatus() {
   const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
   const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
- // Check if the streamer is live
+  // Check if the streamer is live
   if (streamData.data.length === 0) {
     console.log(`${config.ChannelName} is currently offline.`);
 
     if (prevStreamStatus === "online") {
-  const currentTime = new Date().getTime();
-  const timeSinceLastOnline = currentTime - lastOnlineTime;
-  const minutesToWaitBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
+      const currentTime = new Date().getTime();
+      const timeSinceLastOnline = currentTime - lastOnlineTime;
+      const minutesToWaitBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
 
-  fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
-  console.log("Writing current time to lastOnlineTime.txt");
+      fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
+      console.log("Writing current time to lastOnlineTime.txt");
 
-  if (config.enableEndOfStreamMessage && timeSinceLastOnline <= minutesToWaitBeforeEndOfStreamMessage) {
-    const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
-    const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
-    postToMastodon(endMessage);
-    sendAnnouncement = false;
-  }
-  fs.writeFileSync("streamStatus.txt", "offline");
-  console.log("Writing 'offline' to streamStatus.txt");
-	}
-	
+      if (config.enableEndOfStreamMessage && timeSinceLastOnline <= minutesToWaitBeforeEndOfStreamMessage) {
+        const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
+        const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+        postToMastodon(endMessage);
+        sendAnnouncement = false;
+      }
+      fs.writeFileSync("streamStatus.txt", "offline");
+      console.log("Writing 'offline' to streamStatus.txt");
+    }
+    
     return;
   } else {
     console.log(`${config.ChannelName} is live!`);
@@ -126,6 +126,7 @@ async function checkStreamerStatus() {
     postToMastodon(tootMessage);
   }
 }
+
 
 // Check the streamer status every 10 minutes
 checkStreamerStatus();
