@@ -81,7 +81,11 @@ async function checkStreamerStatus() {
     authToken
   );
 
-// Check if the streamer is live
+  // Extract the stream title and URL
+  const streamTitle = streamData.data[0]?.title || '';
+  const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
+
+  // Check if the streamer is live
   if (streamData.data.length === 0) {
     console.log(`${config.ChannelName} is currently offline.`);
 

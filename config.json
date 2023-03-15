@@ -5,7 +5,7 @@
     "twitch_secret": "TWITCH_API_SECRET(REQUIRED)",
     "ChannelName": "STREAMER_NAME(REQUIRED)",
     "minHoursBetweenPosts": 6,
-    "minutesToWaitBeforeEndOfStreamMessage": 5,
+    "minutesToWaitBeforeEndOfStreamMessage": 15,
     "cron": "*/10 * * * *",
     "twitch_stream_id": "",
     "channels": "",
