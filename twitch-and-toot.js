@@ -65,8 +65,9 @@ async function checkStreamerStatus() {
     console.log(`${config.ChannelName} is live!`);
   }
 
-  // Extract the stream title
+  // Extract the stream title and URL
   const streamTitle = streamData.data[0].title;
+  const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
   // Check if it has been more than 6 hours since the last post
   const lastPostTime = fs.existsSync("./lastPostTime.txt")
@@ -74,9 +75,11 @@ async function checkStreamerStatus() {
     : 0;
   const now = new Date().getTime();
   if (now - lastPostTime > 6 * 60 * 60 * 1000) {
-    // Post to Mastodon with the stream title
+    // Post to Mastodon with the stream title and URL
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    const tootMessage = randomMessage.replace("{streamTitle}", streamTitle);
+    const tootMessage = randomMessage
+      .replace("{streamTitle}", streamTitle)
+      .replace("{streamUrl}", streamUrl);
     postToMastodon(tootMessage);
 
     // Save the time of this post
