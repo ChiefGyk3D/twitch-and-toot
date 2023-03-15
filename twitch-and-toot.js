@@ -116,7 +116,7 @@ async function checkStreamerStatus() {
   }
 
   // Extract the stream title and URL
-  const streamTitle = streamData.data[0].title;
+//  const streamTitle = streamData.data[0].title;
   const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
   // Check if it has been more than the configured hours since the last post
