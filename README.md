@@ -24,6 +24,7 @@ For example, you can set a message like this in config.json:
 
 `"Go check out \"{streamTitle}\" at {streamURL}!"`
 
+You can customize the number of hours between Mastodon posts allowed per stream, by default it is set to every 6 hours. But feel free to adjust this to any whole number you prefer.
 
 ## Modules
 
