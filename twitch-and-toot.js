@@ -82,7 +82,7 @@ async function checkStreamerStatus() {
   );
 
   // Extract the stream title and URL
-  const streamTitle = streamData.data[0]?.title || '';
+  const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
   const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
  // Check if the streamer is live
