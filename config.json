@@ -7,7 +7,6 @@
     "minHoursBetweenPosts": 6,
     "minutesToWaitBeforeEndOfStreamMessage": 10,
     "enableEndOfStreamMessage": true,
-    "testMode": true,
     "cron": "*/10 * * * *",
     "twitch_stream_id": "",
     "channels": "",
