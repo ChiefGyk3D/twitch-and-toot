@@ -11,7 +11,7 @@ Requirements and Prerequisites
 
     Clone the Github repository to your device: git clone https://github.com/ChiefGyk3D/twitch-and-toot.git
     Install the required packages: npm install
-    Create a config.json file based on the config_template.json file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track.
+    Create a config.json file based on the config_template.json file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track, messages, and any other changes needed.
     Run the script: node twitch-and-toot.js
 
 ## Configuration
@@ -34,6 +34,7 @@ The auth.js, channelData.js, and getStreams.js modules are borrowed from Twitch-
 ## plans
     
     Create a SystemD service to keep the script running and boot with the device hosting it.
+    Dockerize this all as well
 
 ## Donations and Tips
 
