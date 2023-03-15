@@ -93,19 +93,25 @@ async function checkStreamerStatus() {
     const timeSinceLastOnline = currentTime - lastOnlineTime;
     const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
-    if (prevStreamStatus === "online" && timeSinceLastOnline <= thirtyMinutesInMilliseconds) {
-      const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
-      const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
-      postToMastodon(endMessage);
+    if (prevStreamStatus === "online") {
+      fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
+      console.log("Writing current time to lastOnlineTime.txt");
+
+      if (timeSinceLastOnline <= thirtyMinutesInMilliseconds) {
+        const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
+        const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+        postToMastodon(endMessage);
+        sendAnnouncement = false;
+      }
       fs.writeFileSync("streamStatus.txt", "offline");
-      sendAnnouncement = false;
+      console.log("Writing 'offline' to streamStatus.txt");
     }
     return;
   } else {
     console.log(`${config.ChannelName} is live!`);
     if (prevStreamStatus === "offline") {
       fs.writeFileSync("streamStatus.txt", "online");
-      fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
+      console.log("Writing 'online' to streamStatus.txt");
     }
   }
 
