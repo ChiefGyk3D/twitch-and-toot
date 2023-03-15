@@ -33,7 +33,6 @@ The auth.js, channelData.js, and getStreams.js modules are borrowed from Twitch-
 ## plans
     
     Move Mastodon message choices to config.json and unhinge it from the five message option requirement
-    Consolidate the last post time information into the config.json file.
     Add messaging for when the stream ends to post to Mastodon and thank followers.
     Create a SystemD service to keep the script running and boot with the device hosting it.
 
