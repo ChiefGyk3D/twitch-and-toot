@@ -11,20 +11,21 @@ Requirements and Prerequisites
 
     Clone the Github repository to your device: git clone https://github.com/ChiefGyk3D/twitch-and-toot.git
     Install the required packages: npm install
-    Create a config.json file based on the config_template.json file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track.
+    Create a config.json file based on the config_template.json file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track, messages, and any other changes needed.
     Run the script: node twitch-and-toot.js
 
 ## Configuration
 
 The configuration file config.json is used to store the required information such as Twitch API key, Mastodon API key, and the channel name you want to track.
 
-You can also customize the messages that will be posted to Mastodon when the streamer is live. You can set any random messages and number of them in config.json. The latest version allows you to include the stream title and URL in the messages by using {streamTitle} and {streamURL} placeholders, which will be replaced with the actual stream title and URL, respectively.
+You can also customize the messages that will be posted to Mastodon when the streamer is live as well as when the stream has ended. You can set any random messages and number of them in config.json. The latest version allows you to include the stream title and URL in the messages by using {streamTitle} and {streamURL} placeholders, which will be replaced with the actual stream title and URL, respectively.
 
 For example, you can set a message like this in config.json:
 
 `"Go check out \"{streamTitle}\" at {streamURL}!"`
 
 You can customize the number of hours between Mastodon posts allowed per stream, by default it is set to every 6 hours. But feel free to adjust this to any whole number you prefer.
+You can customize the number of minutes after a stream has ended to make an end of stream post, as well as if you want end of stream messages enabled at all.
 
 ## Modules
 
@@ -32,8 +33,8 @@ The auth.js, channelData.js, and getStreams.js modules are borrowed from Twitch-
 
 ## plans
     
-    Add messaging for when the stream ends to post to Mastodon and thank followers.
     Create a SystemD service to keep the script running and boot with the device hosting it.
+    Dockerize this all as well
 
 ## Donations and Tips
 

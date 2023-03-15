@@ -5,6 +5,8 @@
     "twitch_secret": "TWITCH_API_SECRET(REQUIRED)",
     "ChannelName": "STREAMER_NAME(REQUIRED)",
     "minHoursBetweenPosts": 6,
+    "minutesToWaitBeforeEndOfStreamMessage": 10,
+    "enableEndOfStreamMessage": true,
     "cron": "*/10 * * * *",
     "twitch_stream_id": "",
     "channels": "",
@@ -16,6 +18,11 @@
 	"Streaming live now on Twitch with \"{streamTitle}\", come join the fun: {streamUrl}",
 	"Go check out the stream \"{streamTitle}\", it's live: {streamUrl}",
 	"Don't miss the live stream \"{streamTitle}\", it's happening now: {streamUrl}"
-]
+  ],
+    "endOfStreamMessages": [
+	"Thanks for watching {streamTitle}! See you next time!",
+	"That's it for {streamTitle}! Don't forget to follow for more streams!",
+	"We've wrapped up {streamTitle}. Stay tuned for more awesome content!"
+  ],
 
 }
