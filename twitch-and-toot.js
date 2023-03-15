@@ -85,15 +85,15 @@ async function checkStreamerStatus() {
   const streamTitle = streamData.data[0]?.title || '';
   const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
-  // Check if the streamer is live
+ // Check if the streamer is live
   if (streamData.data.length === 0) {
     console.log(`${config.ChannelName} is currently offline.`);
 
-    const currentTime = new Date().getTime();
-    const timeSinceLastOnline = currentTime - lastOnlineTime;
-    const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
-
     if (prevStreamStatus === "online") {
+      const currentTime = new Date().getTime();
+      const timeSinceLastOnline = currentTime - lastOnlineTime;
+      const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
+
       fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
       console.log("Writing current time to lastOnlineTime.txt");
 
