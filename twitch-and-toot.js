@@ -90,22 +90,23 @@ async function checkStreamerStatus() {
     console.log(`${config.ChannelName} is currently offline.`);
 
     if (prevStreamStatus === "online") {
-      const currentTime = new Date().getTime();
-      const timeSinceLastOnline = currentTime - lastOnlineTime;
-      const minutesToWaitBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
+  const currentTime = new Date().getTime();
+  const timeSinceLastOnline = currentTime - lastOnlineTime;
+  const minutesToWaitBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
 
-      fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
-      console.log("Writing current time to lastOnlineTime.txt");
+  fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
+  console.log("Writing current time to lastOnlineTime.txt");
 
-      if (timeSinceLastOnline <= thirtyMinutesInMilliseconds) {
-        const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
-        const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
-        postToMastodon(endMessage);
-        sendAnnouncement = false;
-      }
-      fs.writeFileSync("streamStatus.txt", "offline");
-      console.log("Writing 'offline' to streamStatus.txt");
-    }
+  if (config.enableEndOfStreamMessage && timeSinceLastOnline <= minutesToWaitBeforeEndOfStreamMessage) {
+    const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
+    const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+    postToMastodon(endMessage);
+    sendAnnouncement = false;
+  }
+  fs.writeFileSync("streamStatus.txt", "offline");
+  console.log("Writing 'offline' to streamStatus.txt");
+	}
+	
     return;
   } else {
     console.log(`${config.ChannelName} is live!`);

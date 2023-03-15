@@ -6,6 +6,7 @@
     "ChannelName": "STREAMER_NAME(REQUIRED)",
     "minHoursBetweenPosts": 6,
     "minutesToWaitBeforeEndOfStreamMessage": 10,
+    "enableEndOfStreamMessage": true,
     "cron": "*/10 * * * *",
     "twitch_stream_id": "",
     "channels": "",
