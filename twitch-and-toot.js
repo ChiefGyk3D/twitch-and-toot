@@ -12,8 +12,9 @@ let sendAnnouncement = false;
 
 async function postToMastodon(status) {
   const currentTime = new Date().getTime();
+  const minMillisecondsBetweenPosts = config.minHoursBetweenPosts * 60 * 60 * 1000;
 
-  if (currentTime - lastPostTime >= 6 * 60 * 60 * 1000) {
+  if (currentTime - lastPostTime >= minMillisecondsBetweenPosts) {
     const M = new mastodon({
       access_token: config.mastodonAccessToken,
       api_url: config.mastodonInstance + "/api/v1/"
@@ -25,11 +26,11 @@ async function postToMastodon(status) {
       } else if (!sendAnnouncement) {
         console.log("Post to Mastodon successful!");
         lastPostTime = currentTime;
-        sendAnnouncement = true; // True, the post was sucessful.
+        sendAnnouncement = true; // True, the post was successful.
       }
     });
   } else {
-    console.log("Mastodon post skipped, last post was less than 6 hours ago.");
+    console.log(`Mastodon post skipped, last post was less than ${config.minHoursBetweenPosts} hours ago.`);
   }
 }
 
@@ -69,21 +70,14 @@ async function checkStreamerStatus() {
   const streamTitle = streamData.data[0].title;
   const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
-  // Check if it has been more than 6 hours since the last post
-  const lastPostTime = fs.existsSync("./lastPostTime.txt")
-    ? parseInt(fs.readFileSync("./lastPostTime.txt").toString(), 10)
-    : 0;
-  const now = new Date().getTime();
-  if (now - lastPostTime > 6 * 60 * 60 * 1000) {
+  // Check if it has been more than the configured hours since the last post
+  if (!sendAnnouncement) {
     // Post to Mastodon with the stream title and URL
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     const tootMessage = randomMessage
       .replace("{streamTitle}", streamTitle)
       .replace("{streamUrl}", streamUrl);
     postToMastodon(tootMessage);
-
-    // Save the time of this post
-    fs.writeFileSync("./lastPostTime.txt", now.toString());
   }
 }
 
