@@ -35,7 +35,7 @@ async function postToMastodon(status, skipTimeLimit = false) {
   const currentTime = new Date().getTime();
   const minMillisecondsBetweenPosts = config.minHoursBetweenPosts * 60 * 60 * 1000;
 
-  if (skipTimeLimit || currentTime - lastPostTime >= minMillisecondsBetweenPosts) {
+  if (skipTimeLimit || (currentTime - lastPostTime >= minMillisecondsBetweenPosts && sendAnnouncement)) {
     const M = new mastodon({
       access_token: config.mastodonAccessToken,
       api_url: config.mastodonInstance + "/api/v1/"
@@ -50,13 +50,14 @@ async function postToMastodon(status, skipTimeLimit = false) {
         fs.writeFile("lastPostTime.txt", lastPostTime, (err) => {
           if (err) console.error("Error writing lastPostTime to file:", err);
         });
-        sendAnnouncement = true;
+        sendAnnouncement = false;
       }
     });
   } else {
     console.log(`Mastodon post skipped, last post was less than ${config.minHoursBetweenPosts} hours ago.`);
   }
 }
+
 
 function testStartOfStreamMessage() {
   const streamTitle = "Test Stream Title";
