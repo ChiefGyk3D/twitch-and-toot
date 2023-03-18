@@ -1,5 +1,6 @@
 const config = require("./config.json");
 const fs = require("fs");
+const mastodon = require("mastodon-api");
 const { getKey } = require("./modules/auth.js");
 const { getData: getChannelData } = require("./modules/channelData.js");
 const { getData: getStreamData } = require("./modules/getStreams.js");
