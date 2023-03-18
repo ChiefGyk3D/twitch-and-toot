@@ -103,7 +103,7 @@ async function checkStreamerStatus() {
   const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
   const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
-// Check if the streamer is live
+  // Check if the streamer is live
   if (streamData.data.length === 0) {
     console.log(`${config.ChannelName} is currently offline.`);
 
@@ -132,17 +132,15 @@ async function checkStreamerStatus() {
     if (prevStreamStatus === "offline") {
       fs.writeFileSync("streamStatus.txt", "online");
       console.log("Writing 'online' to streamStatus.txt");
+
+      // Post to Mastodon with the stream title and URL
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+      const tootMessage = randomMessage
+        .replace("{streamTitle}", streamTitle)
+        .replace("{streamUrl}", streamUrl);
+      postToMastodon(tootMessage);
     }
   }
-
-  // Post to Mastodon with the stream title and URL
-  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-  const tootMessage = randomMessage
-    .replace("{streamTitle}", streamTitle)
-    .replace("{streamUrl}", streamUrl);
-  postToMastodon(tootMessage);
-}
-}
 
 if (config.testStartOfStream) {
   testStartOfStreamMessage();
