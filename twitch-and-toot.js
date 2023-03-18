@@ -142,7 +142,7 @@ async function checkStreamerStatus() {
       postToMastodon(tootMessage);
     }
   }
-
+}
 if (config.testStartOfStream) {
   testStartOfStreamMessage();
 }
