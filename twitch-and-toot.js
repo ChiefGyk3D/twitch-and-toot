@@ -172,12 +172,25 @@ if (config.testEndOfStream) {
 }
 
 if (config.testEndOfStream && config.testStreamTitleFetching) {
+  const streamData = await getStreamData(
+    config.ChannelName,
+    config.twitch_clientID,
+    authToken
+  );
+  const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
   testEndOfStreamMessage(streamTitle);
 }
 
 if (config.testStartOfStream && config.testStreamTitleFetching) {
+  const streamData = await getStreamData(
+    config.ChannelName,
+    config.twitch_clientID,
+    authToken
+  );
+  const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
   testStartOfStreamMessage(streamTitle);
 }
+
 
 
 // Check the streamer status every 10 minutes
