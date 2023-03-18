@@ -4,6 +4,7 @@ const mastodon = require("mastodon-api");
 const { getKey } = require("./modules/auth.js");
 const { getData: getChannelData } = require("./modules/channelData.js");
 const { getData: getStreamData } = require("./modules/getStreams.js");
+const { getData: getLastBroadcastData } = require("./modules/getLastBroadcastData.js");
 const messages = config.messages;
 
 let lastPostTime;
@@ -122,12 +123,23 @@ async function checkStreamerStatus() {
       if (config.enableEndOfStreamMessage) {
         const delayBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
         setTimeout(async () => {
+          // Get the last broadcast data for the end of stream message
+          const lastBroadcastData = await getLastBroadcastData(
+            channelData.id,
+            config.twitch_clientID,
+            authToken
+          );
+      
+          // Use the last stream title for the end of stream message
+          const lastStreamTitle = (lastBroadcastData.data[0] && lastBroadcastData.data[0].title) || '';
+      
           const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
-          const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+          const endMessage = randomEndMessage.replace("{streamTitle}", lastStreamTitle);
           sendAnnouncement = true; // Set sendAnnouncement to true when the stream goes offline
           postToMastodon(endMessage, true); // Set the second argument to true for end of stream messages
         }, delayBeforeEndOfStreamMessage);
       }
+      
     }
     
     return;
