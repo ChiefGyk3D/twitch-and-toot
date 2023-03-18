@@ -96,16 +96,21 @@ async function checkStreamerStatus() {
     return;
   }
 
-  // Get stream data from Twitch API
-  const streamData = await getStreamData(
-    config.ChannelName,
-    config.twitch_clientID,
-    authToken
-  );
+// Get stream data from Twitch API
+const streamData = await getStreamData(
+  config.ChannelName,
+  config.twitch_clientID,
+  authToken
+);
 
-  // Extract the stream title and URL
-  const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
-  const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
+// Extract the stream title and URL
+const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
+const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
+
+// Add this block to print the fetched stream title when testing
+if (config.testStreamTitleFetching) {
+  console.log("Fetched stream title:", streamTitle);
+}
 
   // Check if the streamer is live
   if (streamData.data.length === 0) {
