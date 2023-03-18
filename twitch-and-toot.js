@@ -46,6 +46,7 @@ async function postToMastodon(status, skipTimeLimit = false) {
         console.error(error);
       } else {
         console.log("Post to Mastodon successful!");
+        console.log("Posted status:", status); // Add this line to print the posted status
         lastPostTime = currentTime;
         fs.writeFile("lastPostTime.txt", lastPostTime, (err) => {
           if (err) console.error("Error writing lastPostTime to file:", err);
@@ -57,6 +58,7 @@ async function postToMastodon(status, skipTimeLimit = false) {
     console.log(`Mastodon post skipped, last post was less than ${config.minHoursBetweenPosts} hours ago.`);
   }
 }
+
 
 
 function testStartOfStreamMessage() {
