@@ -107,24 +107,26 @@ async function checkStreamerStatus() {
   if (streamData.data.length === 0) {
     console.log(`${config.ChannelName} is currently offline.`);
 
-    if (prevStreamStatus === "online") {
-      const currentTime = new Date().getTime();
-      const timeSinceLastOnline = currentTime - lastOnlineTime;
-      const minutesToWaitBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
+if (prevStreamStatus === "online") {
+  const currentTime = new Date().getTime();
 
-      fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
-      console.log("Writing current time to lastOnlineTime.txt");
+  fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
+  console.log("Writing current time to lastOnlineTime.txt");
 
-    if (config.enableEndOfStreamMessage && timeSinceLastOnline <= minutesToWaitBeforeEndOfStreamMessage) {
-	const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * 			config.endOfStreamMessages.length)];
-	const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
-	postToMastodon(endMessage, true); // Set the second argument to true for end of stream messages
-	sendAnnouncement = config.enableEndOfStreamMessage;
-	}
+  fs.writeFileSync("streamStatus.txt", "offline");
+  console.log("Writing 'offline' to streamStatus.txt");
 
-      fs.writeFileSync("streamStatus.txt", "offline");
-      console.log("Writing 'offline' to streamStatus.txt");
-    }
+  if (config.enableEndOfStreamMessage) {
+    const delayBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
+    setTimeout(async () => {
+      const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
+      const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+      postToMastodon(endMessage, true); // Set the second argument to true for end of stream messages
+      sendAnnouncement = config.enableEndOfStreamMessage;
+    }, delayBeforeEndOfStreamMessage);
+  }
+}
+
     
     return;
   } else {
