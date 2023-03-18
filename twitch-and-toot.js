@@ -124,6 +124,7 @@ async function checkStreamerStatus() {
         setTimeout(async () => {
           const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
           const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+          sendAnnouncement = true; // Set sendAnnouncement to true when the stream goes offline
           postToMastodon(endMessage, true); // Set the second argument to true for end of stream messages
         }, delayBeforeEndOfStreamMessage);
       }
@@ -145,6 +146,7 @@ async function checkStreamerStatus() {
     }
   }
 }
+
 if (config.testStartOfStream) {
   testStartOfStreamMessage();
 }
