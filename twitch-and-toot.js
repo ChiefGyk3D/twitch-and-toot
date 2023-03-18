@@ -62,8 +62,7 @@ async function postToMastodon(status, skipTimeLimit = false) {
 
 
 
-function testStartOfStreamMessage() {
-  const streamTitle = "Test Stream Title";
+function testStartOfStreamMessage(streamTitle) {
   const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
   const randomMessage = messages[Math.floor(Math.random() * messages.length)];
   const tootMessage = randomMessage
@@ -72,12 +71,12 @@ function testStartOfStreamMessage() {
   console.log("Test Start of Stream Message:", tootMessage);
 }
 
-function testEndOfStreamMessage() {
-  const streamTitle = "Test Stream Title";
+function testEndOfStreamMessage(streamTitle) {
   const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
   const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
   console.log("Test End of Stream Message:", endMessage);
 }
+
 
 
 async function checkStreamerStatus() {
@@ -171,6 +170,15 @@ if (config.testStartOfStream) {
 if (config.testEndOfStream) {
   testEndOfStreamMessage();
 }
+
+if (config.testEndOfStream && config.testStreamTitleFetching) {
+  testEndOfStreamMessage(streamTitle);
+}
+
+if (config.testStartOfStream && config.testStreamTitleFetching) {
+  testStartOfStreamMessage(streamTitle);
+}
+
 
 // Check the streamer status every 10 minutes
 checkStreamerStatus();
