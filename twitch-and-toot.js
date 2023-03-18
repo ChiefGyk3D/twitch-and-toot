@@ -103,30 +103,28 @@ async function checkStreamerStatus() {
   const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
   const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
 
-  // Check if the streamer is live
+// Check if the streamer is live
   if (streamData.data.length === 0) {
     console.log(`${config.ChannelName} is currently offline.`);
 
-if (prevStreamStatus === "online") {
-  const currentTime = new Date().getTime();
+    if (prevStreamStatus === "online") {
+      const currentTime = new Date().getTime();
 
-  fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
-  console.log("Writing current time to lastOnlineTime.txt");
+      fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
+      console.log("Writing current time to lastOnlineTime.txt");
 
-  fs.writeFileSync("streamStatus.txt", "offline");
-  console.log("Writing 'offline' to streamStatus.txt");
+      fs.writeFileSync("streamStatus.txt", "offline");
+      console.log("Writing 'offline' to streamStatus.txt");
 
-  if (config.enableEndOfStreamMessage) {
-    const delayBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
-    setTimeout(async () => {
-      const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
-      const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
-      postToMastodon(endMessage, true); // Set the second argument to true for end of stream messages
-      sendAnnouncement = config.enableEndOfStreamMessage;
-    }, delayBeforeEndOfStreamMessage);
-  }
-}
-
+      if (config.enableEndOfStreamMessage) {
+        const delayBeforeEndOfStreamMessage = config.minutesToWaitBeforeEndOfStreamMessage * 60 * 1000;
+        setTimeout(async () => {
+          const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
+          const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+          postToMastodon(endMessage, true); // Set the second argument to true for end of stream messages
+        }, delayBeforeEndOfStreamMessage);
+      }
+    }
     
     return;
   } else {
@@ -137,8 +135,6 @@ if (prevStreamStatus === "online") {
     }
   }
 
-// Check if it has been more than the configured hours since the last post
-if (!sendAnnouncement) {
   // Post to Mastodon with the stream title and URL
   const randomMessage = messages[Math.floor(Math.random() * messages.length)];
   const tootMessage = randomMessage
