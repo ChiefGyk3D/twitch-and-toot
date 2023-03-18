@@ -161,25 +161,26 @@ if (config.testStreamTitleFetching) {
       postToMastodon(tootMessage);
     }
   }
+
+  if (config.testStartOfStream) {
+    testStartOfStreamMessage();
+  }
+  
+  if (config.testEndOfStream) {
+    testEndOfStreamMessage();
+  }
+  
+  if (config.testEndOfStream && config.testStreamTitleFetching) {
+    const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
+    testEndOfStreamMessage(streamTitle);
+  }
+  
+  if (config.testStartOfStream && config.testStreamTitleFetching) {
+    const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
+    testStartOfStreamMessage(streamTitle);
+  }  
 }
 
-if (config.testStartOfStream) {
-  testStartOfStreamMessage();
-}
-
-if (config.testEndOfStream) {
-  testEndOfStreamMessage();
-}
-
-if (config.testEndOfStream && config.testStreamTitleFetching) {
-  const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
-  testEndOfStreamMessage(streamTitle);
-}
-
-if (config.testStartOfStream && config.testStreamTitleFetching) {
-  const streamTitle = (streamData.data[0] && streamData.data[0].title) || '';
-  testStartOfStreamMessage(streamTitle);
-}
 
 
 
