@@ -57,6 +57,23 @@ async function postToMastodon(status, skipTimeLimit = false) {
   }
 }
 
+function testStartOfStreamMessage() {
+  const streamTitle = "Test Stream Title";
+  const streamUrl = `https://www.twitch.tv/${config.ChannelName}`;
+  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+  const tootMessage = randomMessage
+    .replace("{streamTitle}", streamTitle)
+    .replace("{streamUrl}", streamUrl);
+  console.log("Test Start of Stream Message:", tootMessage);
+}
+
+function testEndOfStreamMessage() {
+  const streamTitle = "Test Stream Title";
+  const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
+  const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+  console.log("Test End of Stream Message:", endMessage);
+}
+
 
 async function checkStreamerStatus() {
   // Get Twitch API authentication token
@@ -126,6 +143,14 @@ if (!sendAnnouncement) {
     .replace("{streamUrl}", streamUrl);
   postToMastodon(tootMessage);
 }
+}
+
+if (config.testStartOfStream) {
+  testStartOfStreamMessage();
+}
+
+if (config.testEndOfStream) {
+  testEndOfStreamMessage();
 }
 
 // Check the streamer status every 10 minutes
