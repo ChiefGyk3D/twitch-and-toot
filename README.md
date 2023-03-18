@@ -35,6 +35,7 @@ The auth.js, channelData.js, and getStreams.js modules are borrowed from Twitch-
     
     Create a SystemD service to keep the script running and boot with the device hosting it.
     Dockerize this all as well
+    Add ability to optionally use Twitter as well
 
 ## Donations and Tips
 

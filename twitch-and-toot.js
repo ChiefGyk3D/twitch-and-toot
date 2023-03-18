@@ -1,4 +1,3 @@
-const mastodon = require("mastodon-api");
 const config = require("./config.json");
 const fs = require("fs");
 const { getKey } = require("./modules/auth.js");
@@ -31,11 +30,11 @@ try {
 
 let sendAnnouncement = false;
 
-async function postToMastodon(status) {
+async function postToMastodon(status, skipTimeLimit = false) {
   const currentTime = new Date().getTime();
   const minMillisecondsBetweenPosts = config.minHoursBetweenPosts * 60 * 60 * 1000;
 
-  if (currentTime - lastPostTime >= minMillisecondsBetweenPosts) {
+  if (skipTimeLimit || currentTime - lastPostTime >= minMillisecondsBetweenPosts) {
     const M = new mastodon({
       access_token: config.mastodonAccessToken,
       api_url: config.mastodonInstance + "/api/v1/"
@@ -44,7 +43,7 @@ async function postToMastodon(status) {
     M.post("statuses", { status: status }, (error, data) => {
       if (error) {
         console.error(error);
-      } else if (!sendAnnouncement) {
+      } else {
         console.log("Post to Mastodon successful!");
         lastPostTime = currentTime;
         fs.writeFile("lastPostTime.txt", lastPostTime, (err) => {
@@ -57,6 +56,7 @@ async function postToMastodon(status) {
     console.log(`Mastodon post skipped, last post was less than ${config.minHoursBetweenPosts} hours ago.`);
   }
 }
+
 
 async function checkStreamerStatus() {
   // Get Twitch API authentication token
@@ -97,12 +97,13 @@ async function checkStreamerStatus() {
       fs.writeFileSync("lastOnlineTime.txt", new Date().getTime());
       console.log("Writing current time to lastOnlineTime.txt");
 
-      if (config.enableEndOfStreamMessage && timeSinceLastOnline <= minutesToWaitBeforeEndOfStreamMessage) {
-        const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
-        const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
-        postToMastodon(endMessage);
-        sendAnnouncement = false;
-      }
+    if (config.enableEndOfStreamMessage && timeSinceLastOnline <= minutesToWaitBeforeEndOfStreamMessage) {
+	const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * 			config.endOfStreamMessages.length)];
+	const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
+	postToMastodon(endMessage, true); // Set the second argument to true for end of stream messages
+	sendAnnouncement = config.enableEndOfStreamMessage;
+	}
+
       fs.writeFileSync("streamStatus.txt", "offline");
       console.log("Writing 'offline' to streamStatus.txt");
     }
@@ -130,4 +131,3 @@ if (!sendAnnouncement) {
 // Check the streamer status every 10 minutes
 checkStreamerStatus();
 setInterval(checkStreamerStatus, 600000);
-

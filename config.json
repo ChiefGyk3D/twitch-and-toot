@@ -24,5 +24,6 @@
 	"That's it for {streamTitle}! Don't forget to follow for more streams!",
 	"We've wrapped up {streamTitle}. Stay tuned for more awesome content!"
   ],
-
+  "testStartOfStream": true,
+  "testEndOfStream": true
 }
