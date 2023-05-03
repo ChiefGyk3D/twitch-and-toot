@@ -44,19 +44,19 @@ async function postToMastodon(status) {
     M.post("statuses", { status: status }, (error, data) => {
       if (error) {
         console.error(error);
-      } else if (!sendAnnouncement) {
+      } else {
         console.log("Post to Mastodon successful!");
         lastPostTime = currentTime;
         fs.writeFile("lastPostTime.txt", lastPostTime, (err) => {
           if (err) console.error("Error writing lastPostTime to file:", err);
         });
-        sendAnnouncement = true;
       }
     });
   } else {
     console.log(`Mastodon post skipped, last post was less than ${config.minHoursBetweenPosts} hours ago.`);
   }
 }
+
 
 async function checkStreamerStatus() {
   // Get Twitch API authentication token
@@ -101,7 +101,7 @@ async function checkStreamerStatus() {
     const randomEndMessage = config.endOfStreamMessages[Math.floor(Math.random() * config.endOfStreamMessages.length)];
     const endMessage = randomEndMessage.replace("{streamTitle}", streamTitle);
     postToMastodon(endMessage);
-    sendAnnouncement = false;
+    //sendAnnouncement = false;
   }
   fs.writeFileSync("streamStatus.txt", "offline");
   console.log("Writing 'offline' to streamStatus.txt");
