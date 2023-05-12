@@ -127,7 +127,11 @@ async function checkStreamerStatus() {
   }
 }
 
-// Check the streamer status every 10 minutes
+// Convert check interval from minutes to milliseconds
+let checkInterval = config.checkIntervalInMinutes * 60 * 1000;
+
+// Check the streamer status at the specified interval
 checkStreamerStatus();
-setInterval(checkStreamerStatus, 600000);
+setInterval(checkStreamerStatus, checkInterval);
+
 

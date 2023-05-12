@@ -7,7 +7,7 @@
     "minHoursBetweenPosts": 6,
     "minutesToWaitBeforeEndOfStreamMessage": 10,
     "enableEndOfStreamMessage": true,
-    "cron": "*/10 * * * *",
+    "checkIntervalInMinutes": 10,
     "twitch_stream_id": "",
     "channels": "",
     "authToken": "",
@@ -23,6 +23,6 @@
 	"Thanks for watching {streamTitle}! See you next time!",
 	"That's it for {streamTitle}! Don't forget to follow for more streams!",
 	"We've wrapped up {streamTitle}. Stay tuned for more awesome content!"
-  ],
+  ]
 
 }
