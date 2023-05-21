@@ -1,5 +1,4 @@
 # Twitch-and-toot
-## Currently in testing/beta report any issues found
 
 Twitch-and-toot is an open source project that allows you to post to Mastodon when a streamer is live on Twitch. It's now built on Python and can run on a RaspberryPi, Single Board Computer, Linux VPS, AWS Lambda, or a private server.
 
@@ -47,4 +46,10 @@ You can also tip the author with the following cryptocurrency addresses:
 - Bitcoin: bc1q5grpa7ramcct4kjmwexfrh74dvjuw9wczn4w2f
 - Monero: 85YxVz8Xd7sW1xSiyzUC5PNqSjYLYk4W8FMERVkvznR38jGTBEViWQSLCnzRYZjmxgUkUKGhxTt2JSFNpJuAqghQLhHgPS5
 - PIVX: DS1CuBQkiidwwPhkfVfQAGUw4RTWPnBXVM
-- Ethereum: 0x2a460d48ab404f191b14e9
+- Ethereum: 0x2a460d48ab404f191b14e9e0df05ee829cbf3733
+
+## Authors
+
+- ChiefGyk3D is the author of Twitch-and-toot
+- [ChiefGyk3D's Mastodon Account](https://social.chiefgyk3d.com/@chiefgyk3d)
+- ChatGPT, an AI developed by OpenAI, helped build about 80% of the Python version of Twitch-and-toot.
