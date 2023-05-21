@@ -1,0 +1,5 @@
+Thank you for joining today's Twitch stream "{stream_title}". Looking forward to seeing you next time!
+Just ended my Twitch stream "{stream_title}". Big thanks to everyone who stopped by!
+My stream "{stream_title}" has ended. Grateful for everyone who joined in. See you next time!
+That's a wrap on "{stream_title}"! Thanks to all who joined the Twitch stream today.
+Just ended "{stream_title}" on Twitch. I appreciate everyone who came to watch, chat, and support!
