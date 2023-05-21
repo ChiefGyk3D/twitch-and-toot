@@ -1,4 +1,5 @@
 # Twitch-and-toot
+## Currently in testing! Report any issues as this is not yet Stable
 
 Twitch-and-toot is an open source project that allows you to post to Mastodon when a streamer is live on Twitch. It's now built on Python and can run on a RaspberryPi, Single Board Computer, Linux VPS, AWS Lambda, or a private server.
 
