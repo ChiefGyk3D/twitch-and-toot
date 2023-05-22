@@ -6,10 +6,31 @@ import random
 import hvac
 import boto3
 import tweepy
+import os
 
 # Load the configuration file
 config = configparser.ConfigParser()
 config.read('config.ini')
+
+# Get environment variable or from config.ini if not available
+def get_config(section, key):
+    return os.getenv(f'{section.upper()}_{key.upper()}', config.get(section, key))
+
+# Get boolean environment variable or from config.ini if not available
+def get_bool_config(section, key):
+    env_var = os.getenv(f'{section.upper()}_{key.upper()}')
+    if env_var is not None:
+        return env_var.lower() in ['true', '1', 't', 'y', 'yes']
+    else:
+        return config.getboolean(section, key)
+
+# Get integer environment variable or from config.ini if not available
+def get_int_config(section, key):
+    env_var = os.getenv(f'{section.upper()}_{key.upper()}')
+    if env_var is not None:
+        return int(env_var)
+    else:
+        return config.getint(section, key)
 
 def get_secret(secret_name, source='aws'):
     if source == 'aws':
@@ -19,31 +40,31 @@ def get_secret(secret_name, source='aws'):
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
         secret = get_secret_value_response['SecretString']
     elif source == 'vault':
-        vault_url = config.get('Secrets', 'vault_url')
-        vault_token = config.get('Secrets', 'vault_token')
+        vault_url = get_config('Secrets', 'vault_url')
+        vault_token = get_config('Secrets', 'vault_token')
         client = hvac.Client(url=vault_url, token=vault_token)
         secret = client.read(secret_name)['data']['data']
     return secret
 
 # Secret Manager setup
-secret_manager = config.get('Secrets', 'secret_manager')
+secret_manager = get_config('Secrets', 'secret_manager')
 
 # Twitch API setup
-twitch_client_id = config.get('Twitch', 'client_id')
-twitch_client_secret = config.get('Twitch', 'client_secret')
-twitch_user_login = config.get('Twitch', 'user_login')
+twitch_client_id = get_config('Twitch', 'client_id')
+twitch_client_secret = get_config('Twitch', 'client_secret')
+twitch_user_login = get_config('Twitch', 'user_login')
 twitch = Twitch(twitch_client_id, twitch_client_secret)
 twitch.authenticate_app([])
 print("Successfully authenticated with Twitch API")
 
 # Mastodon API setup
-mastodon_client_id = config.get('Mastodon', 'client_id')
-mastodon_client_secret = config.get('Mastodon', 'client_secret')
-mastodon_access_token = config.get('Mastodon', 'access_token')
-mastodon_api_base_url = config.get('Mastodon', 'api_base_url')
-messages_file = config.get('Mastodon', 'messages_file')
-end_messages_file = config.get('Mastodon', 'end_messages_file')
-post_end_stream_message = config.getboolean('Mastodon', 'post_end_stream_message')
+mastodon_client_id = get_config('Mastodon', 'client_id')
+mastodon_client_secret = get_config('Mastodon', 'client_secret')
+mastodon_access_token = get_config('Mastodon', 'access_token')
+mastodon_api_base_url = get_config('Mastodon', 'api_base_url')
+messages_file = get_config('Mastodon', 'messages_file')
+end_messages_file = get_config('Mastodon', 'end_messages_file')
+post_end_stream_message = get_bool_config('Mastodon', 'post_end_stream_message')
 
 mastodon = Mastodon(
     client_id=mastodon_client_id,
@@ -54,11 +75,11 @@ mastodon = Mastodon(
 print("Successfully authenticated with Mastodon API")
 
 # Twitter API setup
-twitter_consumer_key = config.get('Twitter', 'consumer_key')
-twitter_consumer_secret = config.get('Twitter', 'consumer_secret')
-twitter_access_token = config.get('Twitter', 'access_token')
-twitter_access_token_secret = config.get('Twitter', 'access_token_secret')
-twitter_enable_posting = config.getboolean('Twitter', 'enable_posting')
+twitter_consumer_key = get_config('Twitter', 'consumer_key')
+twitter_consumer_secret = get_config('Twitter', 'consumer_secret')
+twitter_access_token = get_config('Twitter', 'access_token')
+twitter_access_token_secret = get_config('Twitter', 'access_token_secret')
+twitter_enable_posting = get_bool_config('Twitter', 'enable_posting')
 
 # Initialize the Twitter API object
 auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
@@ -136,13 +157,13 @@ while True:
             post_message(message)
             post_tweet(message)
             was_live = True
-        print(f"Waiting for {config.getint('Settings', 'post_interval')} hours before checking again...")
-        time.sleep(config.getint('Settings', 'post_interval') * 60 * 60)  # Wait for specified hours before checking again
+        print(f"Waiting for {get_int_config('Settings', 'post_interval')} hours before checking again...")
+        time.sleep(get_int_config('Settings', 'post_interval') * 60 * 60)  # Wait for specified hours before checking again
     else:
         if was_live and post_end_stream_message:  # If the stream was live in the last check, post the end-of-stream message
             message = random.choice(end_messages).format(twitch_user_login=twitch_user_login)
             post_message(message)
             post_tweet(message)
             was_live = False
-        print(f"User is not live, checking again in {config.getint('Settings', 'check_interval')} minutes...")
-        time.sleep(config.getint('Settings', 'check_interval') * 60)  # Wait for specified minutes before checking again
+        print(f"User is not live, checking again in {get_int_config('Settings', 'check_interval')} minutes...")
+        time.sleep(get_int_config('Settings', 'check_interval') * 60)  # Wait for specified minutes before checking again
