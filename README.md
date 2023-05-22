@@ -52,13 +52,38 @@ check_interval = YOUR_PREFERRED_CHECK_INTERVAL_IN_MINUTES
 ```
 Please note, the config.ini should be modified to match your needs.
 
+## Twitter Integration
+
+While Twitch-and-toot is fundamentally a Mastodon-first project, we understand that some users may also want to post updates on Twitter. As of the current version, we have incorporated optional Twitter functionality. This feature allows users to post live stream updates not only on Mastodon but also on Twitter.
+
+**Please note, as of the current version, Twitter functionality has not been added to the Docker version yet.**
+
+# Requirements for Twitter Integration
+
+To use the Twitter feature, you would need:
+
+    Twitter API keys (API key & secret, Access token & secret). You can obtain these from the Twitter Developer Dashboard.
+
+# Adding Twitter Integration
+
+The process to add Twitter integration is similar to that of Mastodon. In the config.ini file, a new section needs to be added for Twitter configuration.
+
+```ini
+[Twitter]
+api_key = YOUR_TWITTER_API_KEY
+api_key_secret = YOUR_TWITTER_API_KEY_SECRET
+access_token = YOUR_TWITTER_ACCESS_TOKEN
+access_token_secret = YOUR_TWITTER_ACCESS_TOKEN_SECRET
+```
+
+Again, please be careful not to commit your config.ini with sensitive information to a public repository.
+
+Now, when you run python twitch-and-toot.py, it should post updates to both Mastodon and Twitter, if correctly configured.
 ### Caution
 
-While the above example demonstrates how to configure the bot with secrets directly placed into the config.ini file, this is not a recommended practice for production environments. It is highly suggested to use services like HashiCorp Vault or AWS Secrets Manager to handle secrets more securely.
+As stated before, placing secrets directly into the config.ini file is not a recommended practice for production environments. We are currently working on supporting secure storage and retrieval of Twitter API keys with AWS Secrets Manager and HashiCorp Vault. Please stay tuned for updates.
 
-If you still prefer to put your secrets into config.ini, ensure that this file is appropriately secured and never committed into a public repository.
-
-The Twitch-Mastodon Bot supports the use of both AWS Secrets Manager and HashiCorp Vault. Please see the following sections for how to configure them.
+Moreover, please remember that this is an optional feature and Mastodon remains the primary focus of Twitch-and-toot. The addition of Twitter is intended to offer greater flexibility to our users and is not a shift from our Mastodon-first philosophy. If you experience any issues with the Twitter integration, please feel free to report them.
 
 ## AWS Secrets Manager Integration
 
