@@ -72,68 +72,9 @@ The script also supports optional integration with HashiCorp Vault for secure st
 
 **Please note that this feature is still in testing and any issues should be reported.**
 
-# Docker 
-
-Twitch-and-toot is also available to be run in a Docker container. This can make the setup process easier and more consistent across different environments. It also allows for better scalability if you are running the bot for multiple Twitch channels.
-
-## Requirements and Prerequisites for Docker
-
-- Docker installed on your device.
-- Docker Compose installed on your device (optional, only needed for docker-compose).
-
-## Docker Installation
-
-1. Navigate to the Docker directory in the project: `cd twitch-and-toot/Docker`
-2. Build the Docker image: `docker build -t twitch-and-toot .`
-
-If you are using Docker Compose, you can instead run:
-
-`docker-compose up --build`
-
-This will build and start the Docker container in one command.
-
-## Docker Configuration
-
-Configuration in Docker is done using environment variables instead of a `config.ini` file. These can be passed into the Docker container using the `-e` option with `docker run`:
-
-`docker run -e TWITCH_CLIENT_ID=your_client_id -e TWITCH_CLIENT_SECRET=your_client_secret ... twitch-and-toot`
-
-If you are using Docker Compose, you can put these variables into the `docker-compose.yml` file:
-
-```yaml
-version: '3'
-
-services:
-  twitch-and-toot:
-    build: .
-    environment:
-      TWITCH_CLIENT_ID: your_client_id
-      TWITCH_CLIENT_SECRET: your_client_secret
-      TWITCH_USER_LOGIN: your_user_login
-      MASTODON_CLIENT_ID: your_client_id
-      MASTODON_CLIENT_SECRET: your_client_secret
-      MASTODON_ACCESS_TOKEN: your_access_token
-      MASTODON_API_BASE_URL: your_api_base_url
-      MESSAGES_FILE: messages.txt
-      END_MESSAGES_FILE: end_messages.txt
-      POST_END_STREAM_MESSAGE: 'True'
-      SECRET_MANAGER: your_secret_manager
-      AWS_TWITCH_SECRET_NAME: your_aws_twitch_secret_name
-      AWS_MASTODON_SECRET_NAME: your_aws_mastodon_secret_name
-      VAULT_URL: your_vault_url
-      VAULT_TOKEN: your_vault_token
-      VAULT_TWITCH_SECRET_PATH: your_vault_twitch_secret_path
-      VAULT_MASTODON_SECRET_PATH: your_vault_mastodon_secret_path
-      POST_INTERVAL_IN_HOURS: your_post_interval_in_hours
-      CHECK_INTERVAL_IN_MINUTES: your_check_interval_in_minutes
-```
-These environment variables correspond to the options in the config.ini file.
-
-Please note: If you are using a secrets manager with Docker, you will need to set up a network that allows the Docker container to access the secrets manager.
-
-Remember to replace the necessary values with your actual data.
 ## Future plans
-
+    
+- Dockerize the script for easy deployment and scaling.
 - Add support for more streaming platforms.
 
 ## Donations and Tips

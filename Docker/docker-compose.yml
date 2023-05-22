@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  twitch-and-toot:
+    build: .
+    environment:
+      TWITCH_CLIENT_ID: your_client_id
+      TWITCH_CLIENT_SECRET: your_client_secret
+      TWITCH_USER_LOGIN: your_user_login
+      MASTODON_CLIENT_ID: your_client_id
+      MASTODON_CLIENT_SECRET: your_client_secret
+      MASTODON_ACCESS_TOKEN: your_access_token
+      MASTODON_API_BASE_URL: your_api_base_url
+      MESSAGES_FILE: messages.txt
+      END_MESSAGES_FILE: end_messages.txt
+      POST_END_STREAM_MESSAGE: 'True'
+      SECRET_MANAGER: your_secret_manager
+      AWS_TWITCH_SECRET_NAME: your_aws_twitch_secret_name
+      AWS_MASTODON_SECRET_NAME: your_aws_mastodon_secret_name
+      VAULT_URL: your_vault_url
+      VAULT_TOKEN: your_vault_token
+      VAULT_TWITCH_SECRET_PATH: your_vault_twitch_secret_path
+      VAULT_MASTODON_SECRET_PATH: your_vault_mastodon_secret_path
+      POST_INTERVAL_IN_HOURS: your_post_interval_in_hours
+      CHECK_INTERVAL_IN_MINUTES: your_check_interval_in_minutes
