@@ -14,7 +14,7 @@ Twitch-and-toot is an open source project that allows you to post to Mastodon wh
 1. Clone the Github repository to your device: `git clone https://github.com/ChiefGyk3D/twitch-and-toot.git`
 2. Install the required packages: `pip install -r requirements.txt`
 3. Create a `config.ini` file based on the `config_template.ini` file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track, messages, and any other changes needed.
-4. Run the script: `python twitch_and_toot.py -c config.ini`
+4. Run the script: `python twitch-and-toot.py -c config.ini`
 
 ## Configuration
 
