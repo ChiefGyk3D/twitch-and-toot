@@ -108,10 +108,10 @@ with open(messages_file, 'r') as file:
 with open(end_messages_file, 'r') as file:
     end_messages = file.read().splitlines()
 
-def is_user_live(user_login):
-    user_info = twitch.get_users(logins=[user_login])
+async def is_user_live(user_login):
+    user_info = await twitch.get_users(logins=[user_login])
     user_id = user_info['data'][0]['id']
-    streams = twitch.get_streams(user_id=user_id)
+    streams = await twitch.get_streams(user_id=user_id)
     live_streams = [stream for stream in streams['data'] if stream['type'] == 'live']
     return live_streams[0]['title'] if live_streams else None
 
