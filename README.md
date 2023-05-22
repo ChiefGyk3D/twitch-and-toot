@@ -14,7 +14,7 @@ Twitch-and-toot is an open source project that allows you to post to Mastodon wh
 1. Clone the Github repository to your device: `git clone https://github.com/ChiefGyk3D/twitch-and-toot.git`
 2. Install the required packages: `pip install -r requirements.txt`
 3. Create a `config.ini` file based on the `config_template.ini` file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track, messages, and any other changes needed.
-4. Run the script: `python twitch_mastodon_bot.py -c config.ini`
+4. Run the script: `python twitch_and_toot.py -c config.ini`
 
 ## Configuration
 
@@ -28,6 +28,10 @@ You can customize the number of minutes after a stream has ended to make an end 
 ## AWS Secrets Manager Integration
 
 The script supports optional integration with AWS Secrets Manager. This allows for secure storage and retrieval of the Twitch and Mastodon API credentials. If you want to use this feature, you will need to store the credentials as secrets in AWS Secrets Manager and provide the secret names in the `config.ini` file.
+
+## HashiCorp Vault Integration
+
+The script also supports optional integration with HashiCorp Vault for secure storage and retrieval of the Twitch and Mastodon API credentials. If you want to use this feature, you will need to store the credentials in Vault and provide the necessary Vault information in the `config.ini` file.
 
 ## Running in AWS Lambda
 

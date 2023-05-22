@@ -3,6 +3,7 @@ import configparser
 import random
 import time
 import boto3
+import hvac
 from datetime import datetime, timedelta
 from twitchAPI.twitch import Twitch
 from mastodon import Mastodon
@@ -11,24 +12,28 @@ class TwitchMastodonBot:
     def __init__(self, config_file, twitch_cred=None, mastodon_cred=None):
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
-        
+
         if twitch_cred:
             client_id, client_secret = twitch_cred.split(':')
         elif self.config.getboolean('AWS', 'use_secrets_manager', fallback=False):
             secret_name = self.config.get('AWS', 'twitch_secret_name')
             client_id, client_secret = self.get_aws_secret(secret_name).split(':')
+        elif self.config.getboolean('Vault', 'use_vault', fallback=False):
+            client_id, client_secret = self.get_vault_secret(self.config.get('Vault', 'twitch_secret_path'))
         else:
             client_id = self.config.get('Twitch', 'client_id')
             client_secret = self.config.get('Twitch', 'client_secret')
 
         self.twitch = Twitch(client_id, client_secret)
         self.twitch.authenticate_app([])
-        
+
         if mastodon_cred:
             app_name, api_base_url, client_cred, user_cred = mastodon_cred.split(':')
         elif self.config.getboolean('AWS', 'use_secrets_manager', fallback=False):
             secret_name = self.config.get('AWS', 'mastodon_secret_name')
             app_name, api_base_url, client_cred, user_cred = self.get_aws_secret(secret_name).split(':')
+        elif self.config.getboolean('Vault', 'use_vault', fallback=False):
+            app_name, api_base_url, client_cred, user_cred = self.get_vault_secret(self.config.get('Vault', 'mastodon_secret_path'))
         else:
             app_name = self.config.get('Mastodon', 'app_name')
             api_base_url = self.config.get('Mastodon', 'api_base_url')
@@ -70,6 +75,12 @@ class TwitchMastodonBot:
         if live_streams:
             return live_streams[0]['title']
         return None
+    
+    def get_vault_secret(self, path):
+        client = hvac.Client(url=self.config.get('Vault', 'url'), token=self.config.get('Vault', 'token'))
+        secret = client.read(path)['data']
+        return secret['client_id'], secret['client_secret'], secret['app_name'], secret['api_base_url'], secret['client_cred'], secret['user_cred']
+
 
     def post_message(self, stream_title):
         if (datetime.now() - self.last_post_time) >= self.post_interval:
