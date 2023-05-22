@@ -1,5 +1,3 @@
-I am now live on Twitch! Come join my stream: {stream_title}
-Hey everyone, my Twitch stream titled "{stream_title}" just started! Check it out!
-Join me on Twitch for my live stream: {stream_title}. Let's have some fun!
-I'm currently streaming "{stream_title}" on Twitch. Hope to see you there!
-My Twitch stream, "{stream_title}", is live right now! Come join us!
+I'm now live on Twitch! Playing: {stream_title}. Watch here: https://twitch.tv/{twitch_user_login}
+Join me on Twitch as I play {stream_title}! https://twitch.tv/{twitch_user_login}
+I'm streaming {stream_title} on Twitch right now! Check it out: https://twitch.tv/{twitch_user_login}
