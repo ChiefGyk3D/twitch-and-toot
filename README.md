@@ -1,5 +1,4 @@
 # Twitch-and-toot
-## Currently in testing! Report any issues as this is not yet Stable
 
 Twitch-and-toot is an open source project that allows you to post to Mastodon when a streamer is live on Twitch. It's now built on Python and can run on a RaspberryPi, Single Board Computer, Linux VPS, AWS Lambda, or a private server.
 
@@ -14,38 +13,44 @@ Twitch-and-toot is an open source project that allows you to post to Mastodon wh
 1. Clone the Github repository to your device: `git clone https://github.com/ChiefGyk3D/twitch-and-toot.git`
 2. Install the required packages: `pip install -r requirements.txt`
 3. Create a `config.ini` file based on the `config_template.ini` file in the repository. Fill in the required information such as Twitch API key, Mastodon API key, and the channel name you want to track, messages, and any other changes needed.
-4. Run the script: `python twitch-and-toot.py -c config.ini`
+4. Run the script: `python twitch-and-toot.py`
 
 ## Configuration
 
-The configuration file `config.ini` is used to store the required information such as Twitch API key, Mastodon API key, and the channel name you want to track.
+The config.ini file is used to store the required information such as the Twitch API key, Mastodon API key, and the channel name you want to track. You can also customize the messages that will be posted to Mastodon when the streamer is live and when the stream has ended. These messages are stored in separate text files and are referenced in the config.ini.
 
-You can also customize the messages that will be posted to Mastodon when the streamer is live as well as when the stream has ended. These messages are stored in separate text files and referenced in the `config.ini`. Each message should be on a new line in the text file.
-
-You can customize the number of hours between Mastodon posts allowed per stream, by default it is set to every 6 hours. But feel free to adjust this to any whole number you prefer.
-You can customize the number of minutes after a stream has ended to make an end of stream post, as well as if you want end of stream messages enabled at all.
-
-An example structure for the `config.ini` file is as follows:
+Here's an example structure for the config.ini file:
 
 ```ini
 [Twitch]
-client_id = your_client_id
-client_secret = your_client_secret
-user_login = the_twitch_user_you_want_to_monitor
+client_id = YOUR_TWITCH_CLIENT_ID
+client_secret = YOUR_TWITCH_CLIENT_SECRET
+user_login = YOUR_TWITCH_USERNAME
 
 [Mastodon]
-app_name = your_app_name
-api_base_url = https://your-instance.com
-client_id = your_client_id
-client_secret = your_client_secret
-access_token = your_access_token
-messages_file = path_to_your_messages_file
-end_messages_file = path_to_your_end_messages_file
+app_name = YOUR_APP_NAME
+api_base_url = YOUR_INSTANCE_URL
+client_id = YOUR_CLIENT_ID
+client_secret = YOUR_CLIENT_SECRET
+access_token = YOUR_ACCESS_TOKEN
+messages_file = MESSAGES_FILE_PATH
+end_messages_file = END_MESSAGES_FILE_PATH
+post_end_stream_message = BOOLEAN_VALUE
+
+[Secrets]
+secret_manager = YOUR_SECRET_MANAGER_TYPE 
+aws_twitch_secret_name = YOUR_TWITCH_SECRET_NAME_IN_AWS_SECRETS_MANAGER
+aws_mastodon_secret_name = YOUR_MASTODON_SECRET_NAME_IN_AWS_SECRETS_MANAGER
+vault_url = YOUR_VAULT_URL
+vault_token = YOUR_VAULT_TOKEN
+vault_twitch_secret_path = YOUR_TWITCH_SECRET_PATH_IN_VAULT
+vault_mastodon_secret_path = YOUR_MASTODON_SECRET_PATH_IN_VAULT
 
 [Settings]
-post_interval = hours_between_each_post
-check_interval = minutes_between_each_check
+post_interval = YOUR_PREFERRED_POST_INTERVAL_IN_HOURS
+check_interval = YOUR_PREFERRED_CHECK_INTERVAL_IN_MINUTES
 ```
+Please note, the config.ini should be modified to match your needs.
 
 ### Caution
 
@@ -57,15 +62,15 @@ The Twitch-Mastodon Bot supports the use of both AWS Secrets Manager and HashiCo
 
 ## AWS Secrets Manager Integration
 
-The script supports optional integration with AWS Secrets Manager. This allows for secure storage and retrieval of the Twitch and Mastodon API credentials. If you want to use this feature, you will need to store the credentials as secrets in AWS Secrets Manager and provide the secret names in the `config.ini` file.
+The script supports optional integration with AWS Secrets Manager for secure storage and retrieval of Twitch and Mastodon API keys. To use this feature, store the credentials as secrets in AWS Secrets Manager and provide the secret names in the config.ini file.
+
+**Please note that this feature is still in testing and any issues should be reported.**
 
 ## HashiCorp Vault Integration
 
-The script also supports optional integration with HashiCorp Vault for secure storage and retrieval of the Twitch and Mastodon API credentials. If you want to use this feature, you will need to store the credentials in Vault and provide the necessary Vault information in the `config.ini` file.
+The script also supports optional integration with HashiCorp Vault for secure storage and retrieval of Twitch and Mastodon API keys. To use this feature, store the credentials in Vault and provide the necessary Vault information in the config.ini file.
 
-## Running in AWS Lambda
-
-This script can be adapted to run in an AWS Lambda function. It will require modification to handle the event input and to configure the AWS SDK.
+**Please note that this feature is still in testing and any issues should be reported.**
 
 ## Future plans
     

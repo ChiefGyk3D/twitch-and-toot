@@ -28,6 +28,16 @@ def get_secret(secret_name, source='aws'):
 # Secret Manager setup
 secret_manager = config.get('Secrets', 'secret_manager')
 
+# Twitch API setup
+twitch_client_id = config.get('Twitch', 'client_id')
+twitch_client_secret = config.get('Twitch', 'client_secret')
+twitch_user_login = config.get('Twitch', 'user_login')
+
+# Mastodon API setup
+mastodon_client_id = config.get('Mastodon', 'client_id')
+mastodon_client_secret = config.get('Mastodon', 'client_secret')
+mastodon_access_token = config.get('Mastodon', 'access_token')
+
 # Load secrets from secret manager if configured
 if secret_manager:
     if secret_manager.lower() == 'aws':
@@ -36,18 +46,25 @@ if secret_manager:
         twitch_secret = get_secret(twitch_secret_name, source='aws')
         mastodon_secret = get_secret(mastodon_secret_name, source='aws')
 
+        # Now replace the client id and secret from config file with the secrets from Secret Manager
+        twitch_client_id = twitch_secret['client_id']
+        twitch_client_secret = twitch_secret['client_secret']
+        mastodon_client_id = mastodon_secret['client_id']
+        mastodon_client_secret = mastodon_secret['client_secret']
+        mastodon_access_token = mastodon_secret['access_token']
+
     elif secret_manager.lower() == 'vault':
         twitch_secret_path = config.get('Secrets', 'vault_twitch_secret_path')
         mastodon_secret_path = config.get('Secrets', 'vault_mastodon_secret_path')
         twitch_secret = get_secret(twitch_secret_path, source='vault')
         mastodon_secret = get_secret(mastodon_secret_path, source='vault')
 
-    # Now replace the client id and secret from config file with the secrets from Secret Manager
-    twitch_client_id = twitch_secret['client_id']
-    twitch_client_secret = twitch_secret['client_secret']
-    mastodon_client_id = mastodon_secret['client_id']
-    mastodon_client_secret = mastodon_secret['client_secret']
-    mastodon_access_token = mastodon_secret['access_token']
+        # Now replace the client id and secret from config file with the secrets from Secret Manager
+        twitch_client_id = twitch_secret['client_id']
+        twitch_client_secret = twitch_secret['client_secret']
+        mastodon_client_id = mastodon_secret['client_id']
+        mastodon_client_secret = mastodon_secret['client_secret']
+        mastodon_access_token = mastodon_secret['access_token']
 
 
 # Twitch API setup
