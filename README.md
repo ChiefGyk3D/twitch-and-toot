@@ -25,6 +25,36 @@ You can also customize the messages that will be posted to Mastodon when the str
 You can customize the number of hours between Mastodon posts allowed per stream, by default it is set to every 6 hours. But feel free to adjust this to any whole number you prefer.
 You can customize the number of minutes after a stream has ended to make an end of stream post, as well as if you want end of stream messages enabled at all.
 
+An example structure for the `config.ini` file is as follows:
+
+```ini
+[Twitch]
+client_id = your_client_id
+client_secret = your_client_secret
+user_login = the_twitch_user_you_want_to_monitor
+
+[Mastodon]
+app_name = your_app_name
+api_base_url = https://your-instance.com
+client_id = your_client_id
+client_secret = your_client_secret
+access_token = your_access_token
+messages_file = path_to_your_messages_file
+end_messages_file = path_to_your_end_messages_file
+
+[Settings]
+post_interval = hours_between_each_post
+check_interval = minutes_between_each_check
+```
+
+### Caution
+
+While the above example demonstrates how to configure the bot with secrets directly placed into the config.ini file, this is not a recommended practice for production environments. It is highly suggested to use services like HashiCorp Vault or AWS Secrets Manager to handle secrets more securely.
+
+If you still prefer to put your secrets into config.ini, ensure that this file is appropriately secured and never committed into a public repository.
+
+The Twitch-Mastodon Bot supports the use of both AWS Secrets Manager and HashiCorp Vault. Please see the following sections for how to configure them.
+
 ## AWS Secrets Manager Integration
 
 The script supports optional integration with AWS Secrets Manager. This allows for secure storage and retrieval of the Twitch and Mastodon API credentials. If you want to use this feature, you will need to store the credentials as secrets in AWS Secrets Manager and provide the secret names in the `config.ini` file.

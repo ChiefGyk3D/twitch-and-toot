@@ -37,8 +37,9 @@ class TwitchMastodonBot:
         else:
             app_name = self.config.get('Mastodon', 'app_name')
             api_base_url = self.config.get('Mastodon', 'api_base_url')
-            client_cred = self.config.get('Mastodon', 'client_cred')
-            user_cred = self.config.get('Mastodon', 'user_cred')
+            client_id = self.config.get('Mastodon', 'client_id')
+            client_secret = self.config.get('Mastodon', 'client_secret')
+            access_token = self.config.get('Mastodon', 'access_token')
 
         Mastodon.create_app(
              app_name,
@@ -49,6 +50,7 @@ class TwitchMastodonBot:
         self.mastodon = Mastodon(
             client_id = client_cred,
             access_token = user_cred,
+            access_token = access_token,
             api_base_url = api_base_url
         )
 
