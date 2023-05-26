@@ -17,7 +17,7 @@ Twitch-and-toot is an open source project that allows you to post to Mastodon wh
 
 ## Configuration
 
-The config.ini file is used to store the required information such as the Twitch API key, Mastodon API key, and the channel name you want to track. You can also customize the messages that will be posted to Mastodon when the streamer is live and when the stream has ended. These messages are stored in separate text files and are referenced in the config.ini.
+The config.ini file is used to store the required information such as the Twitch API key, Mastodon API key, and the channel name you want to track. You can also customize the messages that will be posted to Mastodon when the streamer is live and when the stream has ended. These messages are stored in separate text files and are referenced in the config.ini. We have now also included options for log file locations and log levels for improved logging.
 
 Here's an example structure for the config.ini file:
 
@@ -49,8 +49,15 @@ vault_mastodon_secret_path = YOUR_MASTODON_SECRET_PATH_IN_VAULT
 [Settings]
 post_interval = YOUR_PREFERRED_POST_INTERVAL_IN_HOURS
 check_interval = YOUR_PREFERRED_CHECK_INTERVAL_IN_MINUTES
+
+[Logging]
+log_file = YOUR_LOG_FILE_LOCATION
+log_level = YOUR_LOG_LEVEL
+
 ```
 Please note, the config.ini should be modified to match your needs.
+
+The log levels available are DEBUG, INFO, WARNING, ERROR, CRITICAL. Choose one that suits your needs best. The log_file is the path to the file where the logs will be written.
 
 ## Twitter Integration
 
@@ -160,6 +167,7 @@ Remember to replace the necessary values with your actual data.
 ## Future plans
 
 - Add support for more streaming platforms.
+- Enhance logging capabilities for better troubleshooting and monitoring.
 
 ## Donations and Tips
 

@@ -1,0 +1,529 @@
+[
+    {
+        "label": "Twitch",
+        "importPath": "twitchAPI.twitch",
+        "description": "twitchAPI.twitch",
+        "isExtraImport": true,
+        "detail": "twitchAPI.twitch",
+        "documentation": {}
+    },
+    {
+        "label": "Twitch",
+        "importPath": "twitchAPI.twitch",
+        "description": "twitchAPI.twitch",
+        "isExtraImport": true,
+        "detail": "twitchAPI.twitch",
+        "documentation": {}
+    },
+    {
+        "label": "Mastodon",
+        "importPath": "mastodon",
+        "description": "mastodon",
+        "isExtraImport": true,
+        "detail": "mastodon",
+        "documentation": {}
+    },
+    {
+        "label": "Mastodon",
+        "importPath": "mastodon",
+        "description": "mastodon",
+        "isExtraImport": true,
+        "detail": "mastodon",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "configparser",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "configparser",
+        "description": "configparser",
+        "detail": "configparser",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
+        "label": "hvac",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "hvac",
+        "description": "hvac",
+        "detail": "hvac",
+        "documentation": {}
+    },
+    {
+        "label": "boto3",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "boto3",
+        "description": "boto3",
+        "detail": "boto3",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "tweepy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tweepy",
+        "description": "tweepy",
+        "detail": "tweepy",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "get_secret",
+        "kind": 2,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "def get_secret(secret_name, source='aws'):\n    if source == 'aws':\n        # Create a Secrets Manager client\n        session = boto3.session.Session()\n        client = session.client(service_name='secretsmanager')\n        get_secret_value_response = client.get_secret_value(SecretId=secret_name)\n        secret = get_secret_value_response['SecretString']\n    elif source == 'vault':\n        client = hvac.Client(url='https://your-vault-server.com', token='your-vault-token')\n        secret = client.read(secret_name)['data']['data']",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "is_user_live",
+        "kind": 2,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "def is_user_live(user_login):\n    user_info = twitch.get_users(logins=[user_login])\n    user_id = user_info['data'][0]['id']\n    streams = twitch.get_streams(user_id=user_id)\n    live_streams = [stream for stream in streams['data'] if stream['type'] == 'live']\n    return live_streams[0]['title'] if live_streams else None\ndef post_message(message):\n    mastodon.toot(message)\n    print(f\"Posted message: {message}\")\nwas_live = False",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "post_message",
+        "kind": 2,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "def post_message(message):\n    mastodon.toot(message)\n    print(f\"Posted message: {message}\")\nwas_live = False\nwhile True:\n    print(\"Checking if user is live...\")\n    stream_title = is_user_live(twitch_user_login)\n    if stream_title is not None:\n        print(f\"User is live, playing: {stream_title}\")\n        if not was_live:",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "config = configparser.ConfigParser()\nconfig.read('/app/config/config.ini')\ndef get_secret(secret_name, source='aws'):\n    if source == 'aws':\n        # Create a Secrets Manager client\n        session = boto3.session.Session()\n        client = session.client(service_name='secretsmanager')\n        get_secret_value_response = client.get_secret_value(SecretId=secret_name)\n        secret = get_secret_value_response['SecretString']\n    elif source == 'vault':",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "twitch_client_id",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "twitch_client_id = os.getenv('TWITCH_CLIENT_ID')\ntwitch_client_secret = os.getenv('TWITCH_CLIENT_SECRET')\ntwitch_user_login = os.getenv('TWITCH_USER_LOGIN')\n# Mastodon API setup\nmastodon_client_id = os.getenv('MASTODON_CLIENT_ID')\nmastodon_client_secret = os.getenv('MASTODON_CLIENT_SECRET')\nmastodon_access_token = os.getenv('MASTODON_ACCESS_TOKEN')\nmastodon_api_base_url = os.getenv('MASTODON_API_BASE_URL')\nmessages_file = os.getenv('MESSAGES_FILE', 'messages.txt')\nend_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "twitch_client_secret",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "twitch_client_secret = os.getenv('TWITCH_CLIENT_SECRET')\ntwitch_user_login = os.getenv('TWITCH_USER_LOGIN')\n# Mastodon API setup\nmastodon_client_id = os.getenv('MASTODON_CLIENT_ID')\nmastodon_client_secret = os.getenv('MASTODON_CLIENT_SECRET')\nmastodon_access_token = os.getenv('MASTODON_ACCESS_TOKEN')\nmastodon_api_base_url = os.getenv('MASTODON_API_BASE_URL')\nmessages_file = os.getenv('MESSAGES_FILE', 'messages.txt')\nend_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')\npost_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "twitch_user_login",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "twitch_user_login = os.getenv('TWITCH_USER_LOGIN')\n# Mastodon API setup\nmastodon_client_id = os.getenv('MASTODON_CLIENT_ID')\nmastodon_client_secret = os.getenv('MASTODON_CLIENT_SECRET')\nmastodon_access_token = os.getenv('MASTODON_ACCESS_TOKEN')\nmastodon_api_base_url = os.getenv('MASTODON_API_BASE_URL')\nmessages_file = os.getenv('MESSAGES_FILE', 'messages.txt')\nend_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')\npost_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'\n# Secret Manager setup",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon_client_id",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "mastodon_client_id = os.getenv('MASTODON_CLIENT_ID')\nmastodon_client_secret = os.getenv('MASTODON_CLIENT_SECRET')\nmastodon_access_token = os.getenv('MASTODON_ACCESS_TOKEN')\nmastodon_api_base_url = os.getenv('MASTODON_API_BASE_URL')\nmessages_file = os.getenv('MESSAGES_FILE', 'messages.txt')\nend_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')\npost_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'\n# Secret Manager setup\nsecret_manager = os.getenv('SECRET_MANAGER')\n# Load secrets from secret manager if configured",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon_client_secret",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "mastodon_client_secret = os.getenv('MASTODON_CLIENT_SECRET')\nmastodon_access_token = os.getenv('MASTODON_ACCESS_TOKEN')\nmastodon_api_base_url = os.getenv('MASTODON_API_BASE_URL')\nmessages_file = os.getenv('MESSAGES_FILE', 'messages.txt')\nend_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')\npost_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'\n# Secret Manager setup\nsecret_manager = os.getenv('SECRET_MANAGER')\n# Load secrets from secret manager if configured\nif secret_manager:",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon_access_token",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "mastodon_access_token = os.getenv('MASTODON_ACCESS_TOKEN')\nmastodon_api_base_url = os.getenv('MASTODON_API_BASE_URL')\nmessages_file = os.getenv('MESSAGES_FILE', 'messages.txt')\nend_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')\npost_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'\n# Secret Manager setup\nsecret_manager = os.getenv('SECRET_MANAGER')\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon_api_base_url",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "mastodon_api_base_url = os.getenv('MASTODON_API_BASE_URL')\nmessages_file = os.getenv('MESSAGES_FILE', 'messages.txt')\nend_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')\npost_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'\n# Secret Manager setup\nsecret_manager = os.getenv('SECRET_MANAGER')\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':\n        twitch_secret_name = config.get('Secrets', 'aws_twitch_secret_name')",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "messages_file",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "messages_file = os.getenv('MESSAGES_FILE', 'messages.txt')\nend_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')\npost_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'\n# Secret Manager setup\nsecret_manager = os.getenv('SECRET_MANAGER')\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':\n        twitch_secret_name = config.get('Secrets', 'aws_twitch_secret_name')\n        mastodon_secret_name = config.get('Secrets', 'aws_mastodon_secret_name')",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "end_messages_file",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "end_messages_file = os.getenv('END_MESSAGES_FILE', 'end_messages.txt')\npost_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'\n# Secret Manager setup\nsecret_manager = os.getenv('SECRET_MANAGER')\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':\n        twitch_secret_name = config.get('Secrets', 'aws_twitch_secret_name')\n        mastodon_secret_name = config.get('Secrets', 'aws_mastodon_secret_name')\n        twitch_secret = get_secret(twitch_secret_name, source='aws')",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "post_end_stream_message",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "post_end_stream_message = os.getenv('POST_END_STREAM_MESSAGE', 'True') == 'True'\n# Secret Manager setup\nsecret_manager = os.getenv('SECRET_MANAGER')\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':\n        twitch_secret_name = config.get('Secrets', 'aws_twitch_secret_name')\n        mastodon_secret_name = config.get('Secrets', 'aws_mastodon_secret_name')\n        twitch_secret = get_secret(twitch_secret_name, source='aws')\n        mastodon_secret = get_secret(mastodon_secret_name, source='aws')",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "secret_manager",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "secret_manager = os.getenv('SECRET_MANAGER')\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':\n        twitch_secret_name = config.get('Secrets', 'aws_twitch_secret_name')\n        mastodon_secret_name = config.get('Secrets', 'aws_mastodon_secret_name')\n        twitch_secret = get_secret(twitch_secret_name, source='aws')\n        mastodon_secret = get_secret(mastodon_secret_name, source='aws')\n        # Now replace the client id and secret from config file with the secrets from Secret Manager\n        twitch_client_id = twitch_secret['client_id']",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "twitch",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "twitch = Twitch(twitch_client_id, twitch_client_secret)\ntwitch.authenticate_app([])\nprint(\"Successfully authenticated with Twitch API\")\nmastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,\n    api_base_url=mastodon_api_base_url\n)\nprint(\"Successfully authenticated with Mastodon API\")",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "mastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,\n    api_base_url=mastodon_api_base_url\n)\nprint(\"Successfully authenticated with Mastodon API\")\n# Load the messages from the file\nwith open(messages_file, 'r') as file:\n    messages = file.read().splitlines()",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "was_live",
+        "kind": 5,
+        "importPath": "Docker.twitch-and-toot-docker",
+        "description": "Docker.twitch-and-toot-docker",
+        "peekOfCode": "was_live = False\nwhile True:\n    print(\"Checking if user is live...\")\n    stream_title = is_user_live(twitch_user_login)\n    if stream_title is not None:\n        print(f\"User is live, playing: {stream_title}\")\n        if not was_live:\n            message = random.choice(messages).format(stream_title=stream_title, twitch_user_login=twitch_user_login)\n            post_message(message)\n            was_live = True",
+        "detail": "Docker.twitch-and-toot-docker",
+        "documentation": {}
+    },
+    {
+        "label": "get_config",
+        "kind": 2,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "def get_config(section, key):\n    return os.getenv(f'{section.upper()}_{key.upper()}', config.get(section, key))\n# Get boolean environment variable or from config.ini if not available\ndef get_bool_config(section, key):\n    env_var = os.getenv(f'{section.upper()}_{key.upper()}')\n    if env_var is not None:\n        return env_var.lower() in ['true', '1', 't', 'y', 'yes']\n    else:\n        return config.getboolean(section, key)\n# Get integer environment variable or from config.ini if not available",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "get_bool_config",
+        "kind": 2,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "def get_bool_config(section, key):\n    env_var = os.getenv(f'{section.upper()}_{key.upper()}')\n    if env_var is not None:\n        return env_var.lower() in ['true', '1', 't', 'y', 'yes']\n    else:\n        return config.getboolean(section, key)\n# Get integer environment variable or from config.ini if not available\ndef get_int_config(section, key):\n    env_var = os.getenv(f'{section.upper()}_{key.upper()}')\n    if env_var is not None:",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "get_int_config",
+        "kind": 2,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "def get_int_config(section, key):\n    env_var = os.getenv(f'{section.upper()}_{key.upper()}')\n    if env_var is not None:\n        return int(env_var)\n    else:\n        return config.getint(section, key)\ndef get_secret(secret_name, source='aws'):\n    if source == 'aws':\n        # Create a Secrets Manager client\n        session = boto3.session.Session()",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "get_secret",
+        "kind": 2,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "def get_secret(secret_name, source='aws'):\n    if source == 'aws':\n        # Create a Secrets Manager client\n        session = boto3.session.Session()\n        client = session.client(service_name='secretsmanager')\n        get_secret_value_response = client.get_secret_value(SecretId=secret_name)\n        secret = get_secret_value_response['SecretString']\n    elif source == 'vault':\n        vault_url = get_config('Secrets', 'vault_url')\n        vault_token = get_config('Secrets', 'vault_token')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "is_user_live",
+        "kind": 2,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "def is_user_live(user_login):\n    user_info = twitch.get_users(logins=[user_login])\n    user_id = user_info['data'][0]['id']\n    streams = twitch.get_streams(user_id=user_id)\n    live_streams = [stream for stream in streams['data'] if stream['type'] == 'live']\n    return live_streams[0]['title'] if live_streams else None\ndef post_tweet(message):\n    if twitter_enable_posting:\n        twitter_api.update_status(message)\n        print(f\"Posted tweet: {message}\")",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "post_tweet",
+        "kind": 2,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "def post_tweet(message):\n    if twitter_enable_posting:\n        twitter_api.update_status(message)\n        print(f\"Posted tweet: {message}\")\n        if config.getboolean('Logging', 'enabled'):\n            logging.info(f\"Posted tweet: {message}\")\ndef post_message(message):\n    mastodon.toot(message)\n    print(f\"Posted message: {message}\")\n    if config.getboolean('Logging', 'enabled'):",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "post_message",
+        "kind": 2,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "def post_message(message):\n    mastodon.toot(message)\n    print(f\"Posted message: {message}\")\n    if config.getboolean('Logging', 'enabled'):\n        logging.info(f\"Posted message: {message}\")\nwas_live = False\nwhile True:\n    print(\"Checking if user is live...\")\n    if config.getboolean('Logging', 'enabled'):\n        logging.info(\"Checking if user is live...\")",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "config = configparser.ConfigParser()\nconfig.read('config.ini')\n# Configure logging\nif config.getboolean('Logging', 'enabled'):\n    logging.basicConfig(level=config.get('Logging', 'level'), format=config.get('Logging', 'format'))\n    file_handler = logging.FileHandler(config.get('Logging', 'file'))\n    file_handler.setLevel(config.get('Logging', 'level'))\n    file_handler.setFormatter(logging.Formatter(config.get('Logging', 'format')))\n    logging.getLogger().addHandler(file_handler)\n# Get environment variable or from config.ini if not available",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "secret_manager",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "secret_manager = get_config('Secrets', 'secret_manager')\n# Twitch API setup\ntwitch_client_id = get_config('Twitch', 'client_id')\ntwitch_client_secret = get_config('Twitch', 'client_secret')\ntwitch_user_login = get_config('Twitch', 'user_login')\ntwitch = Twitch(twitch_client_id, twitch_client_secret)\ntwitch.authenticate_app([])\nprint(\"Successfully authenticated with Twitch API\")\n# Mastodon API setup\nmastodon_client_id = get_config('Mastodon', 'client_id')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitch_client_id",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitch_client_id = get_config('Twitch', 'client_id')\ntwitch_client_secret = get_config('Twitch', 'client_secret')\ntwitch_user_login = get_config('Twitch', 'user_login')\ntwitch = Twitch(twitch_client_id, twitch_client_secret)\ntwitch.authenticate_app([])\nprint(\"Successfully authenticated with Twitch API\")\n# Mastodon API setup\nmastodon_client_id = get_config('Mastodon', 'client_id')\nmastodon_client_secret = get_config('Mastodon', 'client_secret')\nmastodon_access_token = get_config('Mastodon', 'access_token')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitch_client_secret",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitch_client_secret = get_config('Twitch', 'client_secret')\ntwitch_user_login = get_config('Twitch', 'user_login')\ntwitch = Twitch(twitch_client_id, twitch_client_secret)\ntwitch.authenticate_app([])\nprint(\"Successfully authenticated with Twitch API\")\n# Mastodon API setup\nmastodon_client_id = get_config('Mastodon', 'client_id')\nmastodon_client_secret = get_config('Mastodon', 'client_secret')\nmastodon_access_token = get_config('Mastodon', 'access_token')\nmastodon_api_base_url = get_config('Mastodon', 'api_base_url')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitch_user_login",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitch_user_login = get_config('Twitch', 'user_login')\ntwitch = Twitch(twitch_client_id, twitch_client_secret)\ntwitch.authenticate_app([])\nprint(\"Successfully authenticated with Twitch API\")\n# Mastodon API setup\nmastodon_client_id = get_config('Mastodon', 'client_id')\nmastodon_client_secret = get_config('Mastodon', 'client_secret')\nmastodon_access_token = get_config('Mastodon', 'access_token')\nmastodon_api_base_url = get_config('Mastodon', 'api_base_url')\nmessages_file = get_config('Mastodon', 'messages_file')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitch",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitch = Twitch(twitch_client_id, twitch_client_secret)\ntwitch.authenticate_app([])\nprint(\"Successfully authenticated with Twitch API\")\n# Mastodon API setup\nmastodon_client_id = get_config('Mastodon', 'client_id')\nmastodon_client_secret = get_config('Mastodon', 'client_secret')\nmastodon_access_token = get_config('Mastodon', 'access_token')\nmastodon_api_base_url = get_config('Mastodon', 'api_base_url')\nmessages_file = get_config('Mastodon', 'messages_file')\nend_messages_file = get_config('Mastodon', 'end_messages_file')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon_client_id",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "mastodon_client_id = get_config('Mastodon', 'client_id')\nmastodon_client_secret = get_config('Mastodon', 'client_secret')\nmastodon_access_token = get_config('Mastodon', 'access_token')\nmastodon_api_base_url = get_config('Mastodon', 'api_base_url')\nmessages_file = get_config('Mastodon', 'messages_file')\nend_messages_file = get_config('Mastodon', 'end_messages_file')\npost_end_stream_message = get_bool_config('Mastodon', 'post_end_stream_message')\nmastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon_client_secret",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "mastodon_client_secret = get_config('Mastodon', 'client_secret')\nmastodon_access_token = get_config('Mastodon', 'access_token')\nmastodon_api_base_url = get_config('Mastodon', 'api_base_url')\nmessages_file = get_config('Mastodon', 'messages_file')\nend_messages_file = get_config('Mastodon', 'end_messages_file')\npost_end_stream_message = get_bool_config('Mastodon', 'post_end_stream_message')\nmastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon_access_token",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "mastodon_access_token = get_config('Mastodon', 'access_token')\nmastodon_api_base_url = get_config('Mastodon', 'api_base_url')\nmessages_file = get_config('Mastodon', 'messages_file')\nend_messages_file = get_config('Mastodon', 'end_messages_file')\npost_end_stream_message = get_bool_config('Mastodon', 'post_end_stream_message')\nmastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,\n    api_base_url=mastodon_api_base_url",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon_api_base_url",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "mastodon_api_base_url = get_config('Mastodon', 'api_base_url')\nmessages_file = get_config('Mastodon', 'messages_file')\nend_messages_file = get_config('Mastodon', 'end_messages_file')\npost_end_stream_message = get_bool_config('Mastodon', 'post_end_stream_message')\nmastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,\n    api_base_url=mastodon_api_base_url\n)",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "messages_file",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "messages_file = get_config('Mastodon', 'messages_file')\nend_messages_file = get_config('Mastodon', 'end_messages_file')\npost_end_stream_message = get_bool_config('Mastodon', 'post_end_stream_message')\nmastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,\n    api_base_url=mastodon_api_base_url\n)\nprint(\"Successfully authenticated with Mastodon API\")",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "end_messages_file",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "end_messages_file = get_config('Mastodon', 'end_messages_file')\npost_end_stream_message = get_bool_config('Mastodon', 'post_end_stream_message')\nmastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,\n    api_base_url=mastodon_api_base_url\n)\nprint(\"Successfully authenticated with Mastodon API\")\n# Twitter API setup",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "post_end_stream_message",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "post_end_stream_message = get_bool_config('Mastodon', 'post_end_stream_message')\nmastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,\n    api_base_url=mastodon_api_base_url\n)\nprint(\"Successfully authenticated with Mastodon API\")\n# Twitter API setup\ntwitter_consumer_key = get_config('Twitter', 'consumer_key')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "mastodon",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "mastodon = Mastodon(\n    client_id=mastodon_client_id,\n    client_secret=mastodon_client_secret,\n    access_token=mastodon_access_token,\n    api_base_url=mastodon_api_base_url\n)\nprint(\"Successfully authenticated with Mastodon API\")\n# Twitter API setup\ntwitter_consumer_key = get_config('Twitter', 'consumer_key')\ntwitter_consumer_secret = get_config('Twitter', 'consumer_secret')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitter_consumer_key",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitter_consumer_key = get_config('Twitter', 'consumer_key')\ntwitter_consumer_secret = get_config('Twitter', 'consumer_secret')\ntwitter_access_token = get_config('Twitter', 'access_token')\ntwitter_access_token_secret = get_config('Twitter', 'access_token_secret')\ntwitter_enable_posting = get_bool_config('Twitter', 'enable_posting')\n# Initialize the Twitter API object\nauth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)\nauth.set_access_token(twitter_access_token, twitter_access_token_secret)\ntwitter_api = tweepy.API(auth)\nprint(\"Successfully authenticated with Twitter API\")",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitter_consumer_secret",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitter_consumer_secret = get_config('Twitter', 'consumer_secret')\ntwitter_access_token = get_config('Twitter', 'access_token')\ntwitter_access_token_secret = get_config('Twitter', 'access_token_secret')\ntwitter_enable_posting = get_bool_config('Twitter', 'enable_posting')\n# Initialize the Twitter API object\nauth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)\nauth.set_access_token(twitter_access_token, twitter_access_token_secret)\ntwitter_api = tweepy.API(auth)\nprint(\"Successfully authenticated with Twitter API\")\n# Load secrets from secret manager if configured",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitter_access_token",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitter_access_token = get_config('Twitter', 'access_token')\ntwitter_access_token_secret = get_config('Twitter', 'access_token_secret')\ntwitter_enable_posting = get_bool_config('Twitter', 'enable_posting')\n# Initialize the Twitter API object\nauth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)\nauth.set_access_token(twitter_access_token, twitter_access_token_secret)\ntwitter_api = tweepy.API(auth)\nprint(\"Successfully authenticated with Twitter API\")\n# Load secrets from secret manager if configured\nif secret_manager:",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitter_access_token_secret",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitter_access_token_secret = get_config('Twitter', 'access_token_secret')\ntwitter_enable_posting = get_bool_config('Twitter', 'enable_posting')\n# Initialize the Twitter API object\nauth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)\nauth.set_access_token(twitter_access_token, twitter_access_token_secret)\ntwitter_api = tweepy.API(auth)\nprint(\"Successfully authenticated with Twitter API\")\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitter_enable_posting",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitter_enable_posting = get_bool_config('Twitter', 'enable_posting')\n# Initialize the Twitter API object\nauth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)\nauth.set_access_token(twitter_access_token, twitter_access_token_secret)\ntwitter_api = tweepy.API(auth)\nprint(\"Successfully authenticated with Twitter API\")\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':\n        twitch_secret_name = config.get('Secrets', 'aws_twitch_secret_name')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "auth",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)\nauth.set_access_token(twitter_access_token, twitter_access_token_secret)\ntwitter_api = tweepy.API(auth)\nprint(\"Successfully authenticated with Twitter API\")\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':\n        twitch_secret_name = config.get('Secrets', 'aws_twitch_secret_name')\n        mastodon_secret_name = config.get('Secrets', 'aws_mastodon_secret_name')\n        twitter_secret_name = config.get('Secrets', 'aws_twitter_secret_name')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "twitter_api",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "twitter_api = tweepy.API(auth)\nprint(\"Successfully authenticated with Twitter API\")\n# Load secrets from secret manager if configured\nif secret_manager:\n    if secret_manager.lower() == 'aws':\n        twitch_secret_name = config.get('Secrets', 'aws_twitch_secret_name')\n        mastodon_secret_name = config.get('Secrets', 'aws_mastodon_secret_name')\n        twitter_secret_name = config.get('Secrets', 'aws_twitter_secret_name')\n        twitch_secret = get_secret(twitch_secret_name, source='aws')\n        mastodon_secret = get_secret(mastodon_secret_name, source='aws')",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    },
+    {
+        "label": "was_live",
+        "kind": 5,
+        "importPath": "twitch-and-toot",
+        "description": "twitch-and-toot",
+        "peekOfCode": "was_live = False\nwhile True:\n    print(\"Checking if user is live...\")\n    if config.getboolean('Logging', 'enabled'):\n        logging.info(\"Checking if user is live...\")\n    stream_title = is_user_live(twitch_user_login)\n    if stream_title is not None:\n        print(f\"User is live, playing: {stream_title}\")\n        if config.getboolean('Logging', 'enabled'):\n            logging.info(f\"User is live, playing: {stream_title}\")",
+        "detail": "twitch-and-toot",
+        "documentation": {}
+    }
+]

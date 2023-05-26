@@ -7,10 +7,19 @@ import hvac
 import boto3
 import tweepy
 import os
+import logging 
 
 # Load the configuration file
 config = configparser.ConfigParser()
 config.read('config.ini')
+
+# Configure logging
+if config.getboolean('Logging', 'enabled'):
+    logging.basicConfig(level=config.get('Logging', 'level'), format=config.get('Logging', 'format'))
+    file_handler = logging.FileHandler(config.get('Logging', 'file'))
+    file_handler.setLevel(config.get('Logging', 'level'))
+    file_handler.setFormatter(logging.Formatter(config.get('Logging', 'format')))
+    logging.getLogger().addHandler(file_handler)
 
 # Get environment variable or from config.ini if not available
 def get_config(section, key):
@@ -140,30 +149,48 @@ def post_tweet(message):
     if twitter_enable_posting:
         twitter_api.update_status(message)
         print(f"Posted tweet: {message}")
+        if config.getboolean('Logging', 'enabled'):
+            logging.info(f"Posted tweet: {message}")
 
 def post_message(message):
     mastodon.toot(message)
     print(f"Posted message: {message}")
+    if config.getboolean('Logging', 'enabled'):
+        logging.info(f"Posted message: {message}")
 
 was_live = False
 
 while True:
     print("Checking if user is live...")
+    if config.getboolean('Logging', 'enabled'):
+        logging.info("Checking if user is live...")
     stream_title = is_user_live(twitch_user_login)
     if stream_title is not None:
         print(f"User is live, playing: {stream_title}")
+        if config.getboolean('Logging', 'enabled'):
+            logging.info(f"User is live, playing: {stream_title}")
         if not was_live:
             message = random.choice(messages).format(stream_title=stream_title, twitch_user_login=twitch_user_login)
+            print(f"Start stream message: {message}")  # testing print statement
+            if config.getboolean('Logging', 'enabled'):
+                logging.info(f"Start stream message: {message}")
             post_message(message)
             post_tweet(message)
             was_live = True
         print(f"Waiting for {get_int_config('Settings', 'post_interval')} hours before checking again...")
+        if config.getboolean('Logging', 'enabled'):
+            logging.info(f"Waiting for {get_int_config('Settings', 'post_interval')} hours before checking again...")
         time.sleep(get_int_config('Settings', 'post_interval') * 60 * 60)  # Wait for specified hours before checking again
     else:
         if was_live and post_end_stream_message:  # If the stream was live in the last check, post the end-of-stream message
             message = random.choice(end_messages).format(twitch_user_login=twitch_user_login)
+            print(f"End stream message: {message}")  # testing print statement
+            if config.getboolean('Logging', 'enabled'):
+                logging.info(f"End stream message: {message}")
             post_message(message)
             post_tweet(message)
             was_live = False
         print(f"User is not live, checking again in {get_int_config('Settings', 'check_interval')} minutes...")
+        if config.getboolean('Logging', 'enabled'):
+            logging.info(f"User is not live, checking again in {get_int_config('Settings', 'check_interval')} minutes...")
         time.sleep(get_int_config('Settings', 'check_interval') * 60)  # Wait for specified minutes before checking again
