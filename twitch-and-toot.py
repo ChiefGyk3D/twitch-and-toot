@@ -147,6 +147,8 @@ def post_message(message):
 
 was_live = False
 
+start_time = None
+
 while True:
     print("Checking if user is live...")
     stream_title = is_user_live(twitch_user_login)
@@ -157,13 +159,16 @@ while True:
             post_message(message)
             post_tweet(message)
             was_live = True
+            start_time = time.time()  # Save the time when the stream started
         print(f"Waiting for {get_int_config('Settings', 'post_interval')} hours before checking again...")
         time.sleep(get_int_config('Settings', 'post_interval') * 60 * 60)  # Wait for specified hours before checking again
     else:
         if was_live and post_end_stream_message:  # If the stream was live in the last check, post the end-of-stream message
-            message = random.choice(end_messages).format(twitch_user_login=twitch_user_login)
-            post_message(message)
-            post_tweet(message)
-            was_live = False
+            # Only post the end-of-stream message if enough time has passed since the start of the stream
+            if time.time() - start_time >= get_int_config('Settings', 'end_message_delay') * 60 * 60:
+                message = random.choice(end_messages).format(twitch_user_login=twitch_user_login)
+                post_message(message)
+                post_tweet(message)
+                was_live = False
         print(f"User is not live, checking again in {get_int_config('Settings', 'check_interval')} minutes...")
         time.sleep(get_int_config('Settings', 'check_interval') * 60)  # Wait for specified minutes before checking again
