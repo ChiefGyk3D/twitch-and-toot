@@ -60,7 +60,7 @@ jobs:
 
     - name: Extract metadata
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         images: ${{ env.REGISTRY }}/${{ steps.image-name.outputs.value }}
         tags: |
@@ -154,7 +154,7 @@ jobs:
     - name: Extract metadata for Docker Hub
       if: steps.check-credentials.outputs.skip != 'true'
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         images: ${{ secrets.DOCKERHUB_USERNAME }}/stream-daemon
         tags: |
