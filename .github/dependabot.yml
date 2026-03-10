@@ -46,3 +46,8 @@ updates:
       - "github-actions"
     commit-message:
       prefix: "ci"
+
+  - package-ecosystem: pip
+    directory: /Docker
+    schedule:
+      interval: daily
