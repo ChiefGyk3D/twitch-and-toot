@@ -2,7 +2,7 @@
 # Python 3.14 with multi-arch support: amd64, arm64
 # Because running stream announcements requires the absolute latest Python.
 # Can't use 3.13. That would be barbaric. We need 3.14 to tell people about Fortnite streams.
-FROM python:3.14-slim
+FROM python:3.14-slim@sha256:6a27522252aef8432841f224d9baaa6e9fce07b07584154fa0b9a96603af7456
 
 # Set build arguments for platform detection (automatically set by buildx)
 ARG TARGETPLATFORM
