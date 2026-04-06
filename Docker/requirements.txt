@@ -22,7 +22,7 @@ ollama==0.6.1
 # CVE-2024-45590, CVE-2024-42473: Fixed in requests >= 2.32.2
 # CVE-2024-6472: Fixed in requests >= 2.32.4
 # Using latest stable version 2.32.5
-requests==2.32.5
+requests==2.33.1
 discord.py==2.6.4
 matrix-nio==0.25.2
 beautifulsoup4==4.14.2
