@@ -18,7 +18,7 @@
 # Extras pull the pinned-in-hypeman SDKs: atproto, grapheme, Mastodon.py,
 # ollama, google-genai, beautifulsoup4, boto3, hvac, dopplersdk.
 # TODO: switch to `hypeman-social[all,aws,vault,doppler]>=0.1.0` once on PyPI.
-hypeman-social[all,aws,vault,doppler] @ https://github.com/ChiefGyk3D/hypeman/archive/refs/heads/claude/hypeman-library-extraction-46rmfh.tar.gz
+hypeman-social[all,aws,vault,doppler] @ https://github.com/ChiefGyk3D/hypeman/archive/126c28b5da4901e8ca102955193b71652ec9d348.tar.gz
 
 twitchAPI==4.5.0
 python-dotenv==1.2.2
