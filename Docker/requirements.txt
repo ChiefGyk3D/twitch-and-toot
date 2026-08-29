@@ -4,28 +4,28 @@
 # See: https://www.cisa.gov/news-events/alerts/2025/09/23/widespread-supply-chain-compromise-impacting-npm-ecosystem
 # You may update versions to newer libraries as desired, but auto-picking versions
 # is NOT allowed for security and stability reasons.
+#
+# Keep this file in sync with the repository root requirements.txt.
 ######################################################################
+# Shared core: social posting (Bluesky/Mastodon/Discord/Matrix), LLM
+# generation (Ollama/Gemini with failover + guardrails), config/secrets.
+# Extras pull the pinned-in-hypeman SDKs: atproto, grapheme, Mastodon.py,
+# ollama, google-genai, beautifulsoup4, boto3, hvac, doppler-sdk.
+# TODO: switch to `hypeman-social[all,aws,vault,doppler]>=0.1.0` once on PyPI.
+hypeman-social[all,aws,vault,doppler] @ https://github.com/ChiefGyk3D/hypeman/archive/126c28b5da4901e8ca102955193b71652ec9d348.tar.gz
+
 twitchAPI==4.5.0
-Mastodon.py==2.1.4
-boto3==1.42.83
-hvac==2.4.0
-atproto==0.0.65
-doppler-sdk==1.3.0
 python-dotenv==1.2.2
 google-api-python-client==2.193.0
-google-genai==1.70.0
 # CVE-2025-4565 fix: Requires protobuf >= 4.25.8 (v4), >= 5.29.5 (v5), or >= 6.31.1 (v6)
 # Using v4 for compatibility; upgrade to v5/v6 requires testing
 protobuf==7.34.1
-# Ollama Python client for local LLM support
-ollama==0.6.1
 # CVE-2024-45590, CVE-2024-42473: Fixed in requests >= 2.32.2
 # CVE-2024-6472: Fixed in requests >= 2.32.4
 # Using latest stable version 2.32.5
 requests==2.33.1
-discord.py==2.7.1
-matrix-nio==0.25.2
-beautifulsoup4==4.14.3
+# NOTE: discord.py and matrix-nio removed — never imported; Discord uses
+# webhooks and Matrix uses the client-server HTTP API via requests.
 # CVE-2024-5569: Infinite loop in zipp, fixed in >= 3.19.1
 zipp==3.23.0
 # CVE-2024-37891, CVE-2024-37080: Fixed in urllib3 >= 2.2.2
