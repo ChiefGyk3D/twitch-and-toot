@@ -21,9 +21,7 @@ from typing import List, Optional
 from hypeman_social.llm import STREAM_PROFILE, LLMManager
 from hypeman_social.llm import guardrails as _guardrails
 
-# get_secret is unused here but re-imported so existing test patches of
-# stream_daemon.ai.generator.get_secret keep a target.
-from stream_daemon.config import get_bool_config, get_config, get_secret  # noqa: F401
+from stream_daemon.config import get_bool_config, get_config, get_secret
 
 # Availability flags for the optional provider SDKs, re-exported from the
 # library for callers (and test patches) that consult them here.
@@ -37,6 +35,17 @@ except ImportError:  # pragma: no cover
     GEMINI_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
+
+# get_secret and the availability flags are part of this module's public
+# surface (tests patch them here; callers historically read them here).
+__all__ = [
+    'AIMessageGenerator',
+    'OLLAMA_AVAILABLE',
+    'GEMINI_AVAILABLE',
+    'get_config',
+    'get_bool_config',
+    'get_secret',
+]
 
 
 class AIMessageGenerator:
