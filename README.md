@@ -162,6 +162,23 @@ See [docs/features/llm-model-recommendations.md](docs/features/llm-model-recomme
 - **Quality logging** - Clear visibility into issues and retry outcomes
 - See [docs/features/llm-guardrails.md](docs/features/llm-guardrails.md) for full details
 
+**🔁 Provider Failover & Auto-Recovery (via [hypeman-social](https://github.com/ChiefGyk3D/hypeman)):**
+
+The AI layer is powered by [`hypeman-social`](https://pypi.org/project/hypeman-social/),
+the shared library behind Boon-Tube-Daemon, Star-Daemon, and yomama-as-a-service —
+a fix that lands there protects every daemon at once. It adds two things the
+old built-in providers couldn't do:
+
+- **Automatic reconnection** — taking your Ollama box offline costs you
+  template-fallback posts, not a daemon restart. The daemon keeps probing and
+  picks the model back up the moment the server returns.
+- **Opt-in failover** — set `LLM_FALLBACK_PROVIDER=gemini` and a local outage
+  fails over to the cloud (strictly opt-in, so local-only stays local), then
+  switches back automatically when your box recovers. Use
+  `LLM_OLLAMA_MODEL` / `LLM_GEMINI_MODEL` so each provider names its own model.
+
+Full key reference: [hypeman-social configuration docs](https://github.com/ChiefGyk3D/hypeman/blob/main/docs/CONFIGURATION.md).
+
 ### 🔐 Enterprise-Grade Secrets Management
 - **Doppler** - Modern secrets platform with environment-specific tokens (dev/staging/prod)
 - **AWS Secrets Manager** - Secure cloud-based credential storage with IAM integration
