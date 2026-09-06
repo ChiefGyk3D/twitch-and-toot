@@ -44,8 +44,10 @@ ENV VIRTUAL_ENV=/opt/venv
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Copy requirements first for better caching
-COPY Docker/requirements.txt /app/
+# Copy requirements first for better caching. The repository has exactly one
+# requirements.txt (the root one) — the Docker/ copy it once mirrored drifted
+# and shipped an image missing dependencies, so it's gone.
+COPY requirements.txt /app/
 
 # Install any needed packages specified in requirements.txt
 # Upgrade pip to 25.3+ to fix CVE-2025-8869 (symbolic link extraction vulnerability)
@@ -58,6 +60,13 @@ COPY stream-daemon.py /app/
 COPY stream_daemon/ /app/stream_daemon/
 COPY messages.txt /app/
 COPY end_messages.txt /app/
+
+# Health check: probe the daemon's /healthz endpoint (hypeman-social
+# observability) when HEALTH_PORT is set; otherwise verify PID 1 is alive so
+# the check passes for deployments that keep health off. Uses python urllib
+# because slim images ship no curl.
+HEALTHCHECK --interval=60s --timeout=5s --start-period=30s --retries=3 \
+    CMD ["python", "-c", "import os,sys,urllib.request;port=os.getenv('HEALTH_PORT');urllib.request.urlopen(f'http://127.0.0.1:{port}/healthz', timeout=4) if port else sys.exit(0 if os.path.isdir('/proc/1') else 1)"]
 
 # Run stream-daemon.py when the container launches
 CMD ["python", "stream-daemon.py"]

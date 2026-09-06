@@ -8,6 +8,7 @@ then tell the entire goddamn internet about it. This is what we do with Computer
 degrees now. Your parents are so proud.
 """
 
+import os
 import time
 import sys
 import logging
@@ -23,6 +24,7 @@ from stream_daemon.utils import parse_sectioned_message_file
 from stream_daemon.platforms.social import MastodonPlatform, BlueskyPlatform, DiscordPlatform, MatrixPlatform
 from stream_daemon.platforms.streaming import TwitchPlatform, YouTubePlatform, KickPlatform
 from stream_daemon.publisher import post_to_social_async
+from hypeman_social.observability import HealthState, start_health_server
 
 # Configure logging to use local timezone instead of UTC
 logging.Formatter.converter = time.localtime
@@ -95,6 +97,19 @@ def main():
     # Initialize AI message generator (optional)
     ai_generator = AIMessageGenerator()
     ai_generator.authenticate()  # Will log if enabled/disabled
+
+    # Health endpoint (optional): /healthz and /status on 127.0.0.1, served by
+    # hypeman-social's observability module. A downed LLM reports degraded,
+    # not unhealthy — announcements still go out from the message files.
+    health = HealthState('stream-daemon')
+    for platform in enabled_social:
+        health.set_component(platform.name, True)
+    for platform in enabled_streaming:
+        health.set_component(platform.name, True)
+    health.register('llm', ai_generator.status)
+    health_port = int(os.getenv('HEALTH_PORT', '0') or 0)
+    if health_port:
+        start_health_server(health, health_port)
     
     # Load messages from consolidated files with platform sections
     messages_file = get_config('Messages', 'messages_file', default='messages.txt')
@@ -208,6 +223,7 @@ def main():
     while True:
         try:
             logger.info("🔍 Checking streams...")
+            health.record_event('last_check')
             
             # Collect platforms that just went live or offline in this check cycle
             platforms_went_live = []
