@@ -573,6 +573,22 @@ For platform-specific setup guides, advanced features, and troubleshooting:
 
 ---
 
+### Health Endpoint
+
+Set `HEALTH_PORT` to expose the daemon's health over HTTP (binds to
+`127.0.0.1`), served by [hypeman-social](https://github.com/ChiefGyk3D/hypeman)'s
+observability module:
+
+```env
+HEALTH_PORT=9103
+```
+
+- `GET /healthz` — 200 while every initialized platform is working, 503 when one is broken
+- `GET /status` — full detail: social platforms, streaming platforms, LLM provider state, last check, uptime
+
+A downed AI server reports as **degraded, not unhealthy** — announcements
+still go out from your message files.
+
 ## 📚 Documentation
 
 ### 🚀 Getting Started
@@ -1026,12 +1042,18 @@ services:
       - ./messages.txt:/app/messages.txt
       - ./end_messages.txt:/app/end_messages.txt
     
+      # Optional: expose the daemon's health endpoint (see below)
+      # - HEALTH_PORT=9103
+
     healthcheck:
-      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
-      interval: 30s
+      test: ["CMD", "python", "-c", "import os,sys,urllib.request;port=os.getenv('HEALTH_PORT');urllib.request.urlopen(f'http://127.0.0.1:{port}/healthz', timeout=4) if port else sys.exit(0)"]
+      interval: 60s
       timeout: 10s
       retries: 3
 ```
+
+> The image also ships a built-in `HEALTHCHECK` that probes `/healthz`
+> automatically when `HEALTH_PORT` is set.
 
 **Option 2: Build from Source**
 
