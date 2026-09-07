@@ -17,7 +17,7 @@
 # generation (Ollama/Gemini with failover + guardrails), config/secrets.
 # Extras pull the pinned-in-hypeman SDKs: atproto, grapheme, Mastodon.py,
 # ollama, google-genai, beautifulsoup4, boto3, hvac, dopplersdk.
-hypeman-social[all,aws,vault,doppler]>=0.1.0,<0.2
+hypeman-social[all,aws,vault,doppler]>=0.2.0,<0.3
 
 twitchAPI==4.5.0
 python-dotenv==1.2.2
